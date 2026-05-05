@@ -3,16 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <title>Services</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+
+    h1 {
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    .container {
+      padding: 40px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #222;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      background: #333;
+    }
+
+    a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .back {
+      display: block;
+      margin-top: 40px;
+      text-align: center;
+      color: #aaa;
+    }
+  </style>
 </head>
 <body>
-  <h1>Our Services</h1>
 
-  <ul>
-    <li><a href="#">Service A</a></li>
-    <li><a href="#">Service B</a></li>
-    <li><a href="#">Service C</a></li>
-  </ul>
+  <header>
+    <h1>Our Services</h1>
+  </header>
 
-  <a href="index.html">Back to Home</a>
+  <div class="container">
+    <div class="grid">
+      <div class="card">
+        <a href="#">Service A</a>
+      </div>
+      <div class="card">
+        <a href="#">Service B</a>
+      </div>
+      <div class="card">
+        <a href="#">Service C</a>
+      </div>
+    </div>
+
+    <a href="index.html" class="back">← Back to Home</a>
+  </div>
+
 </body>
 </html>
