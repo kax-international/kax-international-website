@@ -15,6 +15,29 @@
       color: #111;
     }
 
+    /* ▼ ヘッダー（バナーの上に重ねる） */
+    header {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 10; /* ←バナーより前に出す */
+    }
+
+    /* ▼ ロゴ */
+    .logo {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      width: 70px;
+      transition: 0.3s;
+    }
+
+    .logo:hover {
+      transform: scale(1.1);
+    }
+
     /* ▼ バナー */
     .banner {
       width: 100%;
@@ -82,7 +105,14 @@
 
 <body>
 
-  <!-- ▼ バナーだけ追加 -->
+  <!-- ▼ ヘッダー（ロゴのみ） -->
+  <header>
+    <a href="index.html">
+      <img src="Logo_KAXI.png" alt="logo" class="logo">
+    </a>
+  </header>
+
+  <!-- ▼ バナー -->
   <img src="Kiky_Youtube_banner" alt="banner" class="banner">
 
   <div class="container">
