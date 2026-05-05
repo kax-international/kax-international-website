@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Kiky</title>
 
-  <!-- Font Awesome（SNSアイコン） -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
@@ -56,18 +56,24 @@
       color: #aaa;
     }
 
+    /* ▼ ボタン化 */
     .back {
       display: inline-block;
       padding: 10px 20px;
-      background: #fff;
-      color: #111;
+      background: #111;
+      color: #fff;
       text-decoration: none;
       border-radius: 6px;
       transition: 0.3s;
     }
 
     .back:hover {
-      background: #ddd;
+      background: #333;
+      transform: translateY(-2px);
+    }
+
+    .back i {
+      margin-right: 8px;
     }
   </style>
 </head>
@@ -88,6 +94,12 @@
       <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
     </div>
 
+    <a href="services.html" class="back">
+      <i class="fas fa-arrow-left"></i> Back to Services
+    </a>
+  </div>
+</body>
+</html>
     <a href="services.html" class="back">← Back to Services</a>
   </div>
 </body>
