@@ -15,7 +15,7 @@
       color: #111;
     }
 
-    /* ▼ ヘッダー（右上ロゴ） */
+    /* ▼ ヘッダー */
     header {
       position: relative;
       padding: 20px;
@@ -33,15 +33,13 @@
       transform: scale(1.1);
     }
 
-    /* ▼ コンテンツ */
     .container {
       text-align: center;
       max-width: 700px;
-      margin: 80px auto 0; /* 上に余白 */
+      margin: 80px auto 0;
       padding: 20px;
     }
 
-    /* ▼ プロフィール画像 */
     .profile {
       width: 150px;
       height: 150px;
@@ -69,12 +67,14 @@
       justify-content: center;
       gap: 25px;
       margin-bottom: 40px;
+      align-items: center;
     }
 
     .sns a {
       font-size: 2rem;
       color: #111;
       transition: 0.3s;
+      text-decoration: none;
     }
 
     .sns a:hover {
@@ -82,7 +82,21 @@
       color: #888;
     }
 
-    /* ▼ 戻るボタン */
+    /* ▼ note専用 */
+    .note-link {
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: 2px solid #111;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .note-link:hover {
+      background: #41c9b4;
+      color: #41c9b4;
+    }
+
+    /* ▼ 戻る */
     .back {
       display: inline-block;
       padding: 10px 20px;
@@ -106,29 +120,27 @@
 
 <body>
 
-  <!-- ▼ ヘッダー -->
   <header>
     <a href="index.html">
-      <img src="Logo_KAXI.png" alt="logo" class="logo">
+      <img src="logo.png" alt="logo" class="logo">
     </a>
   </header>
 
   <div class="container">
 
-    <!-- ▼ プロフィール画像 -->
-    <img src="IMG_E2598.JPG" alt="Anri" class="profile">
+    <img src="anri.jpg" alt="Anri" class="profile">
 
     <h1>Anri</h1>
 
     <p>
-    母さん下痢
+      国際的な視点で事業展開を行い、複数の分野において活動しています。<br>
+      ブランド構築やマネジメントを中心に、新しい価値の創出を目指しています。
     </p>
 
-    <!-- ▼ SNS -->
     <div class="sns">
       <a href="https://www.instagram.com/anri_sato620810/" target="_blank"><i class="fab fa-instagram"></i></a>
       <a href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
-      <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://note.com/anri_kax_0620" target="_blank" class="note-link">note</a>
       <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
     </div>
 
