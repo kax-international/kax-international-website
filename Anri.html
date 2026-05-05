@@ -1,1 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Anri</title>
 
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #111;
+    }
+
+    /* ▼ ヘッダー（右上ロゴ） */
+    header {
+      position: relative;
+      padding: 20px;
+    }
+
+    .logo {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      width: 70px;
+      transition: 0.3s;
+    }
+
+    .logo:hover {
+      transform: scale(1.1);
+    }
+
+    /* ▼ コンテンツ */
+    .container {
+      text-align: center;
+      max-width: 700px;
+      margin: 80px auto 0; /* 上に余白 */
+      padding: 20px;
+    }
+
+    /* ▼ プロフィール画像 */
+    .profile {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 20px;
+      border: 3px solid #ddd;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    /* ▼ SNS */
+    .sns {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .sns a {
+      font-size: 2rem;
+      color: #111;
+      transition: 0.3s;
+    }
+
+    .sns a:hover {
+      transform: scale(1.2);
+      color: #888;
+    }
+
+    /* ▼ 戻るボタン */
+    .back {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #111;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    .back:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+
+    .back i {
+      margin-right: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ▼ ヘッダー -->
+  <header>
+    <a href="index.html">
+      <img src="logo_KAXI.png" alt="logo" class="logo">
+    </a>
+  </header>
+
+  <div class="container">
+
+    <!-- ▼ プロフィール画像 -->
+    <img src="anri.jpg" alt="Anri" class="profile">
+
+    <h1>Anri</h1>
+
+    <p>
+    母さん下痢
+    </p>
+
+    <!-- ▼ SNS -->
+    <div class="sns">
+      <a href="https://www.instagram.com/anri_sato620810/" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+
+    <a href="services.html" class="back">
+      <i class="fas fa-arrow-left"></i> Back to Services
+    </a>
+
+  </div>
+
+</body>
+</html>
