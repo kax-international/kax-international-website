@@ -2,12 +2,63 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>Information</title>
-</head>
-<body>
-  <h1>Our Information</h1>
-  <p>Coming soon...</p>
+  <title>Our Information</title>
 
-  <a href="index.html">Back to Home</a>
+  <!-- Font Awesome（将来用） -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ffffff, #e0e0e0);
+      color: #111;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    a.button {
+      display: inline-block;
+      padding: 10px 20px;
+      color: #fff;
+      background: #111;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    a.button:hover {
+      background: #333;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Our Information</h1>
+    <p>Coming Soon...</p>
+
+    <a href="index.html" class="button">
+      ← Back to Home
+    </a>
+  </div>
 </body>
 </html>
