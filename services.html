@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Services</title>
+
+  <!-- アイコン用 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     body {
       margin: 0;
@@ -53,11 +57,29 @@
       font-weight: bold;
     }
 
+    /* ▼ ここが新しいボタン */
     .back {
-      display: block;
+      display: inline-block;
       margin-top: 40px;
+      padding: 10px 20px;
+      background: #111;
+      color: #fff;
+      border-radius: 6px;
       text-align: center;
-      color: #aaa;
+      transition: 0.3s;
+    }
+
+    .back:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+
+    .back i {
+      margin-right: 8px;
+    }
+
+    .back-wrapper {
+      text-align: center;
     }
   </style>
 </head>
@@ -70,17 +92,25 @@
   <div class="container">
     <div class="grid">
       <div class="card">
-        <a href="service-a.html">Service A</a>
+        <a href="kiky.html">Kiky</a>
       </div>
       <div class="card">
-        <a href="service-b.html">Service B</a>
+        <a href="service-b.html">Coming Soon...</a>
       </div>
       <div class="card">
-        <a href="service-c.html">Service C</a>
+        <a href="service-c.html">Coming Soon...</a>
       </div>
     </div>
 
-    <a href="index.html" class="back">← Back to Home</a>
+    <div class="back-wrapper">
+      <a href="index.html" class="back">
+        <i class="fas fa-arrow-left"></i> Back to Home
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>
   </div>
 
 </body>
