@@ -15,7 +15,9 @@
       color: #111;
     }
 
+    /* ▼ ヘッダー */
     header {
+      position: relative;
       padding: 20px;
       text-align: center;
       border-bottom: 1px solid #333;
@@ -24,6 +26,19 @@
     h1 {
       margin: 0;
       letter-spacing: 2px;
+    }
+
+    /* ▼ ロゴ（右上固定） */
+    .logo {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      width: 70px;
+      transition: 0.3s;
+    }
+
+    .logo:hover {
+      transform: scale(1.1);
     }
 
     .container {
@@ -57,7 +72,7 @@
       font-weight: bold;
     }
 
-    /* ▼ ここが新しいボタン */
+    /* ▼ 戻るボタン */
     .back {
       display: inline-block;
       margin-top: 40px;
@@ -83,10 +98,16 @@
     }
   </style>
 </head>
+
 <body>
 
   <header>
     <h1>Our Services</h1>
+
+    <!-- ▼ ロゴ（クリックでホームへ） -->
+    <a href="index.html">
+      <img src="Logo_KAXI.png" alt="logo" class="logo">
+    </a>
   </header>
 
   <div class="container">
