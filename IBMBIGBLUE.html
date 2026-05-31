@@ -68,60 +68,107 @@ Loading...
 const CSV_URL =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2rFzA-udsqKKh5FHf9-naLtllz9qpM6cm9JiugzGLh9FrGSnGbKrfxX0Puf0lzSBI5dxVMTm91Ndn/pub?output=csv";
 
-const gallery =
-document.getElementById("gallery");
-
-const searchInput =
-document.getElementById("searchInput");
+const gallery = document.getElementById("gallery");
+const searchInput = document.getElementById("searchInput");
 
 let allData = [];
 
-function driveToImage(url){
+function parseCSVLine(line){
 
-    const match =
-        url.match(/id=([^&]+)/);
+    const result = [];
+    let current = "";
+    let insideQuotes = false;
 
-    if(match){
+    for(let i = 0; i < line.length; i++){
 
-        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
+        const char = line[i];
 
+        if(char === '"'){
+
+            insideQuotes = !insideQuotes;
+
+        }else if(char === "," && !insideQuotes){
+
+            result.push(current);
+            current = "";
+
+        }else{
+
+            current += char;
+
+        }
     }
 
-    return url;
+    result.push(current);
+
+    return result;
+}
+
+function convertDriveUrl(url){
+
+    if(!url) return "";
+
+    let fileId = "";
+
+    if(url.includes("open?id=")){
+
+        fileId = url.split("open?id=")[1];
+
+    }else{
+
+        const match = url.match(/\/d\/([^\/]+)/);
+
+        if(match){
+
+            fileId = match[1];
+
+        }
+    }
+
+    if(!fileId) return "";
+
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
 }
 
 async function loadData(){
 
-    const response =
-        await fetch(CSV_URL);
+    try{
 
-    const text =
-        await response.text();
+        const response = await fetch(CSV_URL);
+        const text = await response.text();
 
-    const rows =
-        text.trim().split("\n");
+        const rows = text.trim().split("\n");
 
-    allData =
-        rows.slice(1).map(row=>{
+        allData = rows.slice(1).map(row => {
 
-            const cols =
-                row.split(",");
+            const cols = parseCSVLine(row);
 
             return {
 
+                timestamp: cols[0] || "",
+                yourName: cols[1] || "",
                 assignmentName: cols[2] || "",
+                mail: cols[3] || "",
                 numbering: cols[4] || "",
                 playType: cols[5] || "",
                 keywords: cols[6] || "",
                 image: cols[7] || "",
-                personnel: cols[8] || "",
-                yourName: cols[1] || ""
+                personnel: cols[8] || ""
 
             };
 
         });
 
-    render(allData);
+        render(allData);
+
+    }catch(error){
+
+        console.error(error);
+
+        gallery.innerHTML =
+        "<h2>Failed to load spreadsheet</h2>";
+
+    }
 
 }
 
@@ -129,51 +176,52 @@ function render(data){
 
     gallery.innerHTML = "";
 
-    data.forEach(item=>{
+    data.forEach(item => {
 
-        const imageUrl =
-            driveToImage(item.image);
-
-        const card =
-            document.createElement("div");
+        const card = document.createElement("div");
 
         card.className = "card";
 
         card.innerHTML = `
 
             <img
-                src="${imageUrl}"
+                src="${convertDriveUrl(item.image)}"
+                alt="${item.assignmentName}"
                 style="
-                width:100%;
-                height:250px;
-                object-fit:cover;
+                    width:100%;
+                    height:300px;
+                    object-fit:cover;
+                    border-radius:10px 10px 0 0;
                 "
             >
 
             <div style="padding:15px">
 
-                <h2>
-                    ${item.assignmentName}
-                </h2>
+                <h2>${item.assignmentName}</h2>
 
                 <p>
-                    <b>Play Type:</b>
+                    <strong>Play Type:</strong>
                     ${item.playType}
                 </p>
 
                 <p>
-                    <b>Keywords:</b>
+                    <strong>Keywords:</strong>
                     ${item.keywords}
                 </p>
 
                 <p>
-                    <b>Numbering:</b>
+                    <strong>Numbering:</strong>
                     ${item.numbering}
                 </p>
 
                 <p>
-                    <b>Personnel:</b>
+                    <strong>Personnel:</strong>
                     ${item.personnel}
+                </p>
+
+                <p>
+                    <strong>Submitted By:</strong>
+                    ${item.yourName}
                 </p>
 
             </div>
@@ -186,37 +234,19 @@ function render(data){
 
 }
 
-searchInput.addEventListener("input",()=>{
+searchInput.addEventListener("input", () => {
 
-    const keyword =
-        searchInput.value.toLowerCase();
+    const keyword = searchInput.value.toLowerCase();
 
-    const filtered =
-        allData.filter(item =>
+    const filtered = allData.filter(item =>
 
-            item.assignmentName
-            .toLowerCase()
-            .includes(keyword)
+        item.assignmentName.toLowerCase().includes(keyword) ||
+        item.playType.toLowerCase().includes(keyword) ||
+        item.keywords.toLowerCase().includes(keyword) ||
+        item.personnel.toLowerCase().includes(keyword) ||
+        item.numbering.toLowerCase().includes(keyword)
 
-            ||
-
-            item.playType
-            .toLowerCase()
-            .includes(keyword)
-
-            ||
-
-            item.keywords
-            .toLowerCase()
-            .includes(keyword)
-
-            ||
-
-            item.personnel
-            .toLowerCase()
-            .includes(keyword)
-
-        );
+    );
 
     render(filtered);
 
