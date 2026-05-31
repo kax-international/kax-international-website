@@ -1,181 +1,74 @@
-const CSV_URL =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2rFzA-udsqKKh5FHf9-naLtllz9qpM6cm9JiugzGLh9FrGSnGbKrfxX0Puf0lzSBI5dxVMTm91Ndn/pub?output=csv";
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAX DATABASE</title>
 
-const gallery = document.getElementById("gallery");
-const searchInput = document.getElementById("searchInput");
-
-let allData = [];
-
-async function loadData() {
-
-    try {
-
-        const response = await fetch(CSV_URL);
-        const csvText = await response.text();
-
-        const rows = csvText
-            .split("\n")
-            .map(row => row.trim())
-            .filter(row => row);
-
-        const headers = parseCSVRow(rows[0]);
-
-        allData = rows.slice(1).map(row => {
-
-            const cols = parseCSVRow(row);
-
-            return {
-                timestamp: cols[0] || "",
-                yourName: cols[1] || "",
-                assignmentName: cols[2] || "",
-                mail: cols[3] || "",
-                numbering: cols[4] || "",
-                playType: cols[5] || "",
-                keywords: cols[6] || "",
-                image: convertDriveUrl(cols[7] || "")
-            };
-
-        });
-
-        render(allData);
-
-    } catch(error) {
-
-        console.error(error);
-
-        gallery.innerHTML = `
-            <div style="padding:40px;text-align:center;">
-                Failed to load spreadsheet.
-            </div>
-        `;
-    }
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f3f3f3;
 }
 
-function parseCSVRow(row) {
-
-    const result = [];
-    let current = "";
-    let insideQuotes = false;
-
-    for(let i = 0; i < row.length; i++) {
-
-        const char = row[i];
-
-        if(char === '"') {
-
-            insideQuotes = !insideQuotes;
-
-        } else if(char === "," && !insideQuotes) {
-
-            result.push(current);
-            current = "";
-
-        } else {
-
-            current += char;
-        }
-    }
-
-    result.push(current);
-
-    return result;
+header{
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:20px;
 }
 
-function convertDriveUrl(url) {
-
-    if(!url) return "";
-
-    const match = url.match(/\/d\/(.*?)\//);
-
-    if(match && match[1]) {
-
-        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
-    }
-
-    return url;
+.search-area{
+    text-align:center;
+    padding:20px;
 }
 
-function render(data) {
-
-    gallery.innerHTML = "";
-
-    data.forEach(item => {
-
-        const card = document.createElement("div");
-
-        card.className = "card";
-
-        card.innerHTML = `
-
-            ${
-                item.image
-                ? `<img src="${item.image}" alt="${item.assignmentName}">`
-                : ""
-            }
-
-            <div class="info">
-
-                <h3>${item.assignmentName}</h3>
-
-                <p>
-                <strong>Name:</strong>
-                ${item.yourName}
-                </p>
-
-                <p>
-                <strong>Play Type:</strong>
-                ${item.playType}
-                </p>
-
-                <p>
-                <strong>Keywords:</strong>
-                ${item.keywords}
-                </p>
-
-                <p>
-                <strong>Number:</strong>
-                ${item.numbering}
-                </p>
-
-            </div>
-        `;
-
-        gallery.appendChild(card);
-
-    });
+#searchInput{
+    width:400px;
+    max-width:90%;
+    padding:12px;
 }
 
-searchInput.addEventListener("input", () => {
+#gallery{
+    padding:20px;
+}
 
-    const keyword =
-        searchInput.value.toLowerCase();
+.card{
+    background:white;
+    border-radius:10px;
+    padding:15px;
+    margin-bottom:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+</style>
 
-    const sorted = [...allData].sort((a, b) => {
+</head>
 
-        const aScore =
-            (
-                a.assignmentName.toLowerCase().includes(keyword) ||
-                a.keywords.toLowerCase().includes(keyword) ||
-                a.playType.toLowerCase().includes(keyword)
-            )
-            ? 1
-            : 0;
+<body>
 
-        const bScore =
-            (
-                b.assignmentName.toLowerCase().includes(keyword) ||
-                b.keywords.toLowerCase().includes(keyword) ||
-                b.playType.toLowerCase().includes(keyword)
-            )
-            ? 1
-            : 0;
+<header>
+    <h1>KAX DATABASE</h1>
+</header>
 
-        return bScore - aScore;
+<div class="search-area">
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search..."
+    >
+</div>
 
-    });
+<div id="gallery">
+Loading...
+</div>
 
-    render(sorted);
+<script>
+document.getElementById("gallery").innerHTML =
+'<div class="card">Test Success</div>';
+</script>
 
-});
+</body>
+</html>
 
 loadData();
