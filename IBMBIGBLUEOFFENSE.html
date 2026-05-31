@@ -16,6 +16,7 @@ body{
 }
 
 header{
+    position:relative;
     background:#111;
     color:white;
     text-align:center;
@@ -86,6 +87,22 @@ header{
     margin:8px 0;
 }
 
+    .home-button{
+    position:absolute;
+    top:20px;
+    right:20px;
+    background:white;
+    color:#111;
+    text-decoration:none;
+    padding:10px 18px;
+    border-radius:6px;
+    font-weight:bold;
+    transition:0.2s;
+}
+
+.home-button:hover{
+    background:#ddd;
+}
 </style>
 
 </head>
@@ -93,7 +110,13 @@ header{
 <body>
 
 <header>
+
+    <a href="IBMBIGBLUE.html" class="home-button">
+        ← Home
+    </a>
+
     <h1>IBM BIG BLUE 2026 OFFENSE</h1>
+
 </header>
 
 <div class="search-area">
