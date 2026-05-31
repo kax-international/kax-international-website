@@ -68,29 +68,160 @@ Loading...
 const CSV_URL =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2rFzA-udsqKKh5FHf9-naLtllz9qpM6cm9JiugzGLh9FrGSnGbKrfxX0Puf0lzSBI5dxVMTm91Ndn/pub?output=csv";
 
-async function loadData(){
+const gallery =
+document.getElementById("gallery");
 
-    try{
+const searchInput =
+document.getElementById("searchInput");
 
-        const response = await fetch(CSV_URL);
-        const text = await response.text();
+let allData = [];
 
-        document.getElementById("gallery").innerHTML =
-        "<pre>" + text + "</pre>";
+function driveToImage(url){
 
-    }catch(error){
+    const match =
+        url.match(/id=([^&]+)/);
 
-        document.getElementById("gallery").innerHTML =
-        "CSV読み込み失敗";
+    if(match){
 
-        console.error(error);
+        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
 
     }
 
+    return url;
 }
+
+async function loadData(){
+
+    const response =
+        await fetch(CSV_URL);
+
+    const text =
+        await response.text();
+
+    const rows =
+        text.trim().split("\n");
+
+    allData =
+        rows.slice(1).map(row=>{
+
+            const cols =
+                row.split(",");
+
+            return {
+
+                assignmentName: cols[2] || "",
+                numbering: cols[4] || "",
+                playType: cols[5] || "",
+                keywords: cols[6] || "",
+                image: cols[7] || "",
+                personnel: cols[8] || "",
+                yourName: cols[1] || ""
+
+            };
+
+        });
+
+    render(allData);
+
+}
+
+function render(data){
+
+    gallery.innerHTML = "";
+
+    data.forEach(item=>{
+
+        const imageUrl =
+            driveToImage(item.image);
+
+        const card =
+            document.createElement("div");
+
+        card.className = "card";
+
+        card.innerHTML = `
+
+            <img
+                src="${imageUrl}"
+                style="
+                width:100%;
+                height:250px;
+                object-fit:cover;
+                "
+            >
+
+            <div style="padding:15px">
+
+                <h2>
+                    ${item.assignmentName}
+                </h2>
+
+                <p>
+                    <b>Play Type:</b>
+                    ${item.playType}
+                </p>
+
+                <p>
+                    <b>Keywords:</b>
+                    ${item.keywords}
+                </p>
+
+                <p>
+                    <b>Numbering:</b>
+                    ${item.numbering}
+                </p>
+
+                <p>
+                    <b>Personnel:</b>
+                    ${item.personnel}
+                </p>
+
+            </div>
+
+        `;
+
+        gallery.appendChild(card);
+
+    });
+
+}
+
+searchInput.addEventListener("input",()=>{
+
+    const keyword =
+        searchInput.value.toLowerCase();
+
+    const filtered =
+        allData.filter(item =>
+
+            item.assignmentName
+            .toLowerCase()
+            .includes(keyword)
+
+            ||
+
+            item.playType
+            .toLowerCase()
+            .includes(keyword)
+
+            ||
+
+            item.keywords
+            .toLowerCase()
+            .includes(keyword)
+
+            ||
+
+            item.personnel
+            .toLowerCase()
+            .includes(keyword)
+
+        );
+
+    render(filtered);
+
+});
 
 loadData();
 
 </script>
-
-loadData();
