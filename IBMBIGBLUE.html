@@ -1,53 +1,181 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+const CSV_URL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2rFzA-udsqKKh5FHf9-naLtllz9qpM6cm9JiugzGLh9FrGSnGbKrfxX0Puf0lzSBI5dxVMTm91Ndn/pub?output=csv";
 
-<title>KAX DATABASE</title>
+const gallery = document.getElementById("gallery");
+const searchInput = document.getElementById("searchInput");
 
-<link rel="stylesheet" href="style.css">
-</head>
+let allData = [];
 
-<body>
+async function loadData() {
 
-<header>
-    <h1>KAX DATABASE</h1>
+    try {
 
-    <div class="top-buttons">
+        const response = await fetch(CSV_URL);
+        const csvText = await response.text();
 
-        <a
-        href="https://docs.google.com/forms/d/1E311voQtdZb5LYO-o3ztK7iJHD-16Fp_tJhbFxEH1Mk/viewform"
-        target="_blank"
-        class="button"
-        >
-        Upload Form
-        </a>
+        const rows = csvText
+            .split("\n")
+            .map(row => row.trim())
+            .filter(row => row);
 
-        <a
-        href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2rFzA-udsqKKh5FHf9-naLtllz9qpM6cm9JiugzGLh9FrGSnGbKrfxX0Puf0lzSBI5dxVMTm91Ndn/pubhtml"
-        target="_blank"
-        class="button"
-        >
-        Spreadsheet
-        </a>
+        const headers = parseCSVRow(rows[0]);
 
-    </div>
-</header>
+        allData = rows.slice(1).map(row => {
 
-<section class="search-area">
+            const cols = parseCSVRow(row);
 
-    <input
-        type="text"
-        id="searchInput"
-        placeholder="Search Assignment Name..."
-    >
+            return {
+                timestamp: cols[0] || "",
+                yourName: cols[1] || "",
+                assignmentName: cols[2] || "",
+                mail: cols[3] || "",
+                numbering: cols[4] || "",
+                playType: cols[5] || "",
+                keywords: cols[6] || "",
+                image: convertDriveUrl(cols[7] || "")
+            };
 
-</section>
+        });
 
-<section id="gallery"></section>
+        render(allData);
 
-<script src="app.js"></script>
+    } catch(error) {
 
-</body>
-</html>
+        console.error(error);
+
+        gallery.innerHTML = `
+            <div style="padding:40px;text-align:center;">
+                Failed to load spreadsheet.
+            </div>
+        `;
+    }
+}
+
+function parseCSVRow(row) {
+
+    const result = [];
+    let current = "";
+    let insideQuotes = false;
+
+    for(let i = 0; i < row.length; i++) {
+
+        const char = row[i];
+
+        if(char === '"') {
+
+            insideQuotes = !insideQuotes;
+
+        } else if(char === "," && !insideQuotes) {
+
+            result.push(current);
+            current = "";
+
+        } else {
+
+            current += char;
+        }
+    }
+
+    result.push(current);
+
+    return result;
+}
+
+function convertDriveUrl(url) {
+
+    if(!url) return "";
+
+    const match = url.match(/\/d\/(.*?)\//);
+
+    if(match && match[1]) {
+
+        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
+    }
+
+    return url;
+}
+
+function render(data) {
+
+    gallery.innerHTML = "";
+
+    data.forEach(item => {
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+        card.innerHTML = `
+
+            ${
+                item.image
+                ? `<img src="${item.image}" alt="${item.assignmentName}">`
+                : ""
+            }
+
+            <div class="info">
+
+                <h3>${item.assignmentName}</h3>
+
+                <p>
+                <strong>Name:</strong>
+                ${item.yourName}
+                </p>
+
+                <p>
+                <strong>Play Type:</strong>
+                ${item.playType}
+                </p>
+
+                <p>
+                <strong>Keywords:</strong>
+                ${item.keywords}
+                </p>
+
+                <p>
+                <strong>Number:</strong>
+                ${item.numbering}
+                </p>
+
+            </div>
+        `;
+
+        gallery.appendChild(card);
+
+    });
+}
+
+searchInput.addEventListener("input", () => {
+
+    const keyword =
+        searchInput.value.toLowerCase();
+
+    const sorted = [...allData].sort((a, b) => {
+
+        const aScore =
+            (
+                a.assignmentName.toLowerCase().includes(keyword) ||
+                a.keywords.toLowerCase().includes(keyword) ||
+                a.playType.toLowerCase().includes(keyword)
+            )
+            ? 1
+            : 0;
+
+        const bScore =
+            (
+                b.assignmentName.toLowerCase().includes(keyword) ||
+                b.keywords.toLowerCase().includes(keyword) ||
+                b.playType.toLowerCase().includes(keyword)
+            )
+            ? 1
+            : 0;
+
+        return bScore - aScore;
+
+    });
+
+    render(sorted);
+
+});
+
+loadData();
