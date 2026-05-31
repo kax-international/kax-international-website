@@ -64,11 +64,33 @@ Loading...
 </div>
 
 <script>
-document.getElementById("gallery").innerHTML =
-'<div class="card">Test Success</div>';
-</script>
 
-</body>
-</html>
+const CSV_URL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2rFzA-udsqKKh5FHf9-naLtllz9qpM6cm9JiugzGLh9FrGSnGbKrfxX0Puf0lzSBI5dxVMTm91Ndn/pub?output=csv";
+
+async function loadData(){
+
+    try{
+
+        const response = await fetch(CSV_URL);
+        const text = await response.text();
+
+        document.getElementById("gallery").innerHTML =
+        "<pre>" + text + "</pre>";
+
+    }catch(error){
+
+        document.getElementById("gallery").innerHTML =
+        "CSV読み込み失敗";
+
+        console.error(error);
+
+    }
+
+}
+
+loadData();
+
+</script>
 
 loadData();
