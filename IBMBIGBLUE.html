@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>KAX DATABASE</title>
 
 <style>
+
 body{
     margin:0;
     font-family:Arial,sans-serif;
@@ -25,22 +28,64 @@ header{
 }
 
 #searchInput{
-    width:400px;
+    width:500px;
     max-width:90%;
     padding:12px;
+    font-size:16px;
+    border:1px solid #ccc;
+    border-radius:6px;
 }
 
 #gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(500px,1fr));
+    gap:20px;
     padding:20px;
 }
 
 .card{
     background:white;
     border-radius:10px;
-    padding:15px;
-    margin-bottom:15px;
+    overflow:hidden;
     box-shadow:0 2px 8px rgba(0,0,0,.15);
+    transition:0.2s;
 }
+
+.card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 6px 16px rgba(0,0,0,.2);
+}
+
+.image-container{
+    height:500px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f5f5f5;
+    overflow:hidden;
+    border-bottom:1px solid #ddd;
+}
+
+.image-container img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+    display:block;
+}
+
+.info{
+    padding:15px;
+}
+
+.info h2{
+    margin-top:0;
+    margin-bottom:15px;
+}
+
+.info p{
+    margin:8px 0;
+}
+
 </style>
 
 </head>
@@ -52,15 +97,19 @@ header{
 </header>
 
 <div class="search-area">
+
     <input
         type="text"
         id="searchInput"
-        placeholder="Search..."
+        placeholder="Search Play Name, Personnel, Keywords..."
     >
+
 </div>
 
 <div id="gallery">
-Loading...
+
+    Loading...
+
 </div>
 
 <script>
@@ -79,7 +128,7 @@ function parseCSVLine(line){
     let current = "";
     let insideQuotes = false;
 
-    for(let i = 0; i < line.length; i++){
+    for(let i=0;i<line.length;i++){
 
         const char = line[i];
 
@@ -127,7 +176,7 @@ function convertDriveUrl(url){
 
     if(!fileId) return "";
 
-    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
 }
 
 async function loadData(){
@@ -137,27 +186,31 @@ async function loadData(){
         const response = await fetch(CSV_URL);
         const text = await response.text();
 
-        const rows = text.trim().split("\n");
+        const rows =
+            text
+            .trim()
+            .split("\n");
 
-        allData = rows.slice(1).map(row => {
+        allData =
+            rows.slice(1).map(row => {
 
-            const cols = parseCSVLine(row);
+                const cols = parseCSVLine(row);
 
-            return {
+                return {
 
-                timestamp: cols[0] || "",
-                yourName: cols[1] || "",
-                assignmentName: cols[2] || "",
-                mail: cols[3] || "",
-                numbering: cols[4] || "",
-                playType: cols[5] || "",
-                keywords: cols[6] || "",
-                image: cols[7] || "",
-                personnel: cols[8] || ""
+                    timestamp: cols[0] || "",
+                    yourName: cols[1] || "",
+                    assignmentName: cols[2] || "",
+                    mail: cols[3] || "",
+                    numbering: cols[4] || "",
+                    playType: cols[5] || "",
+                    keywords: cols[6] || "",
+                    image: cols[7] || "",
+                    personnel: cols[8] || ""
 
-            };
+                };
 
-        });
+            });
 
         render(allData);
 
@@ -178,24 +231,23 @@ function render(data){
 
     data.forEach(item => {
 
-        const card = document.createElement("div");
+        const card =
+            document.createElement("div");
 
         card.className = "card";
 
         card.innerHTML = `
 
-            <img
-                src="${convertDriveUrl(item.image)}"
-                alt="${item.assignmentName}"
-                style="
-                    width:100%;
-                    height:300px;
-                    object-fit:cover;
-                    border-radius:10px 10px 0 0;
-                "
-            >
+            <div class="image-container">
 
-            <div style="padding:15px">
+                <img
+                    src="${convertDriveUrl(item.image)}"
+                    alt="${item.assignmentName}"
+                >
+
+            </div>
+
+            <div class="info">
 
                 <h2>${item.assignmentName}</h2>
 
@@ -236,17 +288,31 @@ function render(data){
 
 searchInput.addEventListener("input", () => {
 
-    const keyword = searchInput.value.toLowerCase();
+    const keyword =
+        searchInput.value.toLowerCase();
 
-    const filtered = allData.filter(item =>
+    const filtered =
+        allData.filter(item =>
 
-        item.assignmentName.toLowerCase().includes(keyword) ||
-        item.playType.toLowerCase().includes(keyword) ||
-        item.keywords.toLowerCase().includes(keyword) ||
-        item.personnel.toLowerCase().includes(keyword) ||
-        item.numbering.toLowerCase().includes(keyword)
+            item.assignmentName.toLowerCase().includes(keyword)
 
-    );
+            ||
+
+            item.playType.toLowerCase().includes(keyword)
+
+            ||
+
+            item.keywords.toLowerCase().includes(keyword)
+
+            ||
+
+            item.personnel.toLowerCase().includes(keyword)
+
+            ||
+
+            item.numbering.toLowerCase().includes(keyword)
+
+        );
 
     render(filtered);
 
@@ -255,3 +321,6 @@ searchInput.addEventListener("input", () => {
 loadData();
 
 </script>
+
+</body>
+</html>
