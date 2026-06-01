@@ -58,7 +58,7 @@ header{
 }
 
 .image-container{
-    height:500px;
+    height:600px;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -176,31 +176,7 @@ function parseCSVLine(line){
     return result;
 }
 
-function convertDriveUrl(url){
 
-    if(!url) return "";
-
-    let fileId = "";
-
-    if(url.includes("open?id=")){
-
-        fileId = url.split("open?id=")[1];
-
-    }else{
-
-        const match = url.match(/\/d\/([^\/]+)/);
-
-        if(match){
-
-            fileId = match[1];
-
-        }
-    }
-
-    if(!fileId) return "";
-
-    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
-}
 
 async function loadData(){
 
@@ -221,17 +197,19 @@ async function loadData(){
 
                 return {
 
-                    timestamp: cols[0] || "",
-                    yourName: cols[1] || "",
-                    assignmentName: cols[2] || "",
-                    mail: cols[3] || "",
-                    numbering: cols[4] || "",
-                    playType: cols[5] || "",
-                    keywords: cols[6] || "",
-                    image: cols[7] || "",
-                    personnel: cols[8] || ""
+    timestamp: cols[0] || "",
+    yourName: cols[1] || "",
+    assignmentName: cols[2] || "",
+    mail: cols[3] || "",
 
-                };
+    personnel: cols[4] || "",
+    numbering: cols[5] || "",
+    playType: cols[6] || "",
+    keywords: cols[7] || "",
+    otherKeyword: cols[8] || "",
+    image: cols[9] || ""
+
+};
 
             });
 
@@ -264,8 +242,9 @@ function render(data){
             <div class="image-container">
 
                 <img
-                    src="${convertDriveUrl(item.image)}"
-                    alt="${item.assignmentName}"
+    src="${item.image}"
+    alt="${item.assignmentName}"
+>
                 >
 
             </div>
