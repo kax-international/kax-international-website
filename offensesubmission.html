@@ -1,94 +1,266 @@
-window.addEventListener("DOMContentLoaded", () => {
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    const form = document.getElementById("form");
+<title>2026 BIG BLUE Offense Assignment Submission</title>
 
-    if(!form){
-        console.error("Form not found");
-        return;
-    }
+<style>
 
-    form.addEventListener("submit", async function(e){
+body{
+    font-family:Arial,sans-serif;
+    background:#f3f3f3;
+    margin:0;
+}
 
-        e.preventDefault();
+header{
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
 
-        // Cloudinary処理
+.container{
+    max-width:900px;
+    margin:30px auto;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
 
-    });
+h2{
+    margin-top:0;
+}
 
-});
-<script>
+.section{
+    margin-bottom:25px;
+}
 
-const CLOUD_NAME = "dxvgp89ma";
-const UPLOAD_PRESET = "IBM BIG BLUE OFFENSE";
+label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:8px;
+}
 
-document.getElementById("form").addEventListener("submit", async function(e){
+input[type=text],
+input[type=email],
+select{
+    width:100%;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    box-sizing:border-box;
+}
 
-    e.preventDefault();
+.checkbox-group{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:8px;
+}
 
-    const submitButton =
-        document.querySelector("button");
+.checkbox-group label{
+    font-weight:normal;
+}
 
-    submitButton.disabled = true;
-    submitButton.innerText = "Uploading...";
+.submit-btn{
+    width:100%;
+    padding:15px;
+    font-size:18px;
+    font-weight:bold;
+    border:none;
+    background:#111;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+}
 
-    try{
+.submit-btn:hover{
+    background:#333;
+}
 
-        const imageFile =
-            document.getElementById("image").files[0];
+.back-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:white;
+    color:#111;
+    padding:10px 15px;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:bold;
+    box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
 
-        if(!imageFile){
+</style>
+</head>
 
-            alert("Please select an image.");
-            submitButton.disabled = false;
-            submitButton.innerText = "SUBMIT";
-            return;
+<body>
 
-        }
+<a href="services.html" class="back-btn">
+← Back
+</a>
 
-        const formData = new FormData();
+<header>
+    <h1>2026 BIG BLUE Offense Assignment Search Engine</h1>
+</header>
 
-        formData.append("file", imageFile);
-        formData.append(
-            "upload_preset",
-            UPLOAD_PRESET
-        );
+<div class="container">
 
-        const uploadResponse =
-            await fetch(
-                `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-                {
-                    method: "POST",
-                    body: formData
-                }
-            );
+<form id="form">
 
-        const uploadResult =
-            await uploadResponse.json();
+<div class="section">
+<label>Your Name *</label>
+<input type="text" id="yourName" required>
+</div>
 
-        console.log(uploadResult);
+<div class="section">
+<label>Assignment Name *</label>
+<input type="text" id="assignmentName" required>
+</div>
 
-        const imageUrl =
-            uploadResult.secure_url;
+<div class="section">
+<label>Mail Address *</label>
+<input type="email" id="mail" required>
+</div>
 
-        alert(
-            "Upload Success!\n\n" +
-            imageUrl
-        );
+<div class="section">
+<label>Personnel *</label>
 
-        submitButton.disabled = false;
-        submitButton.innerText = "SUBMIT";
+<select id="personnel" required>
+<option value="">Select Personnel</option>
+<option>White</option>
+<option>Lime</option>
+<option>Sky</option>
+<option>Gray</option>
+<option>Brown</option>
+<option>Black</option>
+</select>
 
-    }catch(error){
+</div>
 
-        console.error(error);
+<div class="section">
+<label>Numbering *</label>
 
-        alert("Upload Failed");
+<select id="numbering" required>
 
-        submitButton.disabled = false;
-        submitButton.innerText = "SUBMIT";
+<option value="">Select Numbering</option>
 
-    }
+<option>10/11</option>
+<option>12/13</option>
+<option>14/15</option>
+<option>16/17</option>
+<option>18/19</option>
+<option>20/21</option>
+<option>24/25</option>
+<option>26/27</option>
+<option>28/29</option>
+<option>30/31</option>
+<option>32/33</option>
+<option>42/43</option>
+<option>44/45</option>
+<option>46/47</option>
+<option>48/49</option>
+<option>00/01</option>
+<option>02/03</option>
+<option>04/05</option>
+<option>06/07</option>
+<option>08/09</option>
+<option>80/81</option>
+<option>54/55</option>
+<option>60/61</option>
+<option>62/63</option>
+<option>64/65</option>
+<option>66/67</option>
+<option>68/69</option>
+<option>70/71</option>
+<option>72/73</option>
+<option>98/99</option>
+<option>410/411</option>
+<option>310/311</option>
+<option>412/413</option>
+<option>312/313</option>
+<option>416/417</option>
+<option>316/317</option>
+<option>916/917</option>
+<option>No Numbering</option>
 
-});
+</select>
 
-</script>
+</div>
+
+<div class="section">
+<label>Play Type *</label>
+
+<select id="playType" required>
+<option value="">Select Play Type</option>
+<option>Inside Run</option>
+<option>Outside Run</option>
+<option>Quick Pass</option>
+<option>3 step Pass</option>
+<option>5 step Pass</option>
+<option>Roll</option>
+<option>PA</option>
+<option>Screen</option>
+<option>Special Play</option>
+</select>
+
+</div>
+
+<div class="section">
+
+<label>Keywords</label>
+
+<div class="checkbox-group">
+
+<label><input type="checkbox" value="TB Routes"> TB Routes</label>
+<label><input type="checkbox" value="For Reece/Sunda"> For Reece/Sunda</label>
+<label><input type="checkbox" value="set up PA"> set up PA</label>
+<label><input type="checkbox" value="Roll"> Roll</label>
+<label><input type="checkbox" value="Throwback"> Throwback</label>
+<label><input type="checkbox" value="Boots"> Boots</label>
+<label><input type="checkbox" value="Naked"> Naked</label>
+<label><input type="checkbox" value="RedZone/3rd&short"> RedZone/3rd&short</label>
+<label><input type="checkbox" value="DX"> DX</label>
+<label><input type="checkbox" value="Zone Scheme"> Zone Scheme</label>
+<label><input type="checkbox" value="Gap Scheme"> Gap Scheme</label>
+<label><input type="checkbox" value="Option 12"> Option 12</label>
+<label><input type="checkbox" value="2min"> 2min</label>
+<label><input type="checkbox" value="Marine"> Marine</label>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<label>Other Keyword</label>
+
+<input type="text" id="otherKeyword">
+
+</div>
+
+<div class="section">
+
+<label>Image *</label>
+
+<input
+    type="file"
+    id="image"
+    accept="image/*"
+    required
+>
+
+</div>
+
+<button type="submit" class="submit-btn">
+SUBMIT
+</button>
+
+</form>
+
+</div>
+
+</body>
+</html>
