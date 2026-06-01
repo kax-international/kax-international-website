@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -52,9 +53,16 @@
 
     .card {
       background: #222;
-      padding: 30px;
       border-radius: 10px;
+
+      min-height: 120px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
       text-align: center;
+
       transition: 0.3s;
     }
 
@@ -63,15 +71,20 @@
       background: #333;
     }
 
-    a {
-      text-decoration: none;
+    .card a,
+    .card span {
+      display: block;
+      width: 100%;
+      text-align: center;
+
       color: #fff;
+      text-decoration: none;
       font-weight: bold;
       font-size: 18px;
     }
 
     .coming-soon {
-      color: #aaa;
+      color: #aaa !important;
       cursor: default;
     }
 
@@ -83,6 +96,7 @@
       color: #fff;
       border-radius: 6px;
       text-align: center;
+      text-decoration: none;
       transition: 0.3s;
     }
 
@@ -98,63 +112,66 @@
     .back-wrapper {
       text-align: center;
     }
+
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>Our Services</h1>
+<header>
 
-    <a href="index.html">
-      <img src="Logo_KAXI.png" alt="logo" class="logo">
-    </a>
-  </header>
+  <h1>Our Services</h1>
 
-  <div class="container">
+  <a href="index.html">
+    <img src="Logo_KAXI.png" alt="logo" class="logo">
+  </a>
 
-    <div class="grid">
+</header>
 
-      <div class="card">
-        <a href="kiky.html">Kiky</a>
-      </div>
+<div class="container">
 
-      <div class="card">
-        <a href="Anri.html">Anri</a>
-      </div>
+  <div class="grid">
 
-      <div class="card">
-        <a href="IBMBIGBLUE.html">BIG BLUE</a>
-      </div>
-
-      <!-- Coming Soon ×12 -->
-
-      <div class="card">
-        <<div class="card">
-  <a href="/offensesubmission.html">offense form</a>
-</div>
-      </div>
-      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
-      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
-      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
-      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
-      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
-      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
-      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
-      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
-      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
-      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
-      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
-
+    <div class="card">
+      <a href="kiky.html">Kiky</a>
     </div>
 
-    <div class="back-wrapper">
-      <a href="index.html" class="back">
-        <i class="fas fa-arrow-left"></i> Back to Home
-      </a>
+    <div class="card">
+      <a href="Anri.html">Anri</a>
     </div>
+
+    <div class="card">
+      <a href="IBMBIGBLUE.html">BIG BLUE</a>
+    </div>
+
+    <div class="card">
+      <a href="offensesubmission.html">Offense Form</a>
+    </div>
+
+    <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+    <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+    <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+    <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+    <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+    <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+    <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+    <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+    <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+    <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+    <div class="card"><span class="coming-soon">Coming Soon...</span></div>
 
   </div>
+
+  <div class="back-wrapper">
+
+    <a href="index.html" class="back">
+      <i class="fas fa-arrow-left"></i>
+      Back to Home
+    </a>
+
+  </div>
+
+</div>
 
 </body>
 </html>
