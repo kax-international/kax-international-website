@@ -266,6 +266,9 @@ SUBMIT
 const CLOUD_NAME = "dxvgp89ma";
 const UPLOAD_PRESET = "IBM BIG BLUE OFFENSE";
 
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbwiGzTSd6sH12Sdt1cIdSJzpVlUen1unPrfe7SJm4GvJLHSVaLvz79djBxZf9yKV6mq/exec";
+
 document.getElementById("form").addEventListener("submit", async function(e){
 
     e.preventDefault();
@@ -277,6 +280,48 @@ document.getElementById("form").addEventListener("submit", async function(e){
     submitButton.innerText = "Uploading...";
 
     try{
+
+        // =========================
+        // フォームデータ取得
+        // =========================
+
+        const yourName =
+            document.getElementById("yourName").value;
+
+        const assignmentName =
+            document.getElementById("assignmentName").value;
+
+        const mail =
+            document.getElementById("mail").value;
+
+        const personnel =
+            document.getElementById("personnel").value;
+
+        const numbering =
+            document.getElementById("numbering").value;
+
+        const playType =
+            document.getElementById("playType").value;
+
+        const otherKeyword =
+            document.getElementById("otherKeyword").value;
+
+        // =========================
+        // Keywords取得
+        // =========================
+
+        const keywords =
+            Array.from(
+                document.querySelectorAll(
+                    'input[type="checkbox"]:checked'
+                )
+            )
+            .map(cb => cb.value)
+            .join(", ");
+
+        // =========================
+        // 画像取得
+        // =========================
 
         const imageFile =
             document.getElementById("image").files[0];
@@ -292,6 +337,10 @@ document.getElementById("form").addEventListener("submit", async function(e){
 
         }
 
+        // =========================
+        // Cloudinary Upload
+        // =========================
+
         const formData = new FormData();
 
         formData.append("file", imageFile);
@@ -301,7 +350,7 @@ document.getElementById("form").addEventListener("submit", async function(e){
             UPLOAD_PRESET
         );
 
-        const response =
+        const uploadResponse =
             await fetch(
                 `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
                 {
@@ -310,35 +359,71 @@ document.getElementById("form").addEventListener("submit", async function(e){
                 }
             );
 
+        const uploadResult =
+            await uploadResponse.json();
+
+        console.log(uploadResult);
+
+        if(!uploadResult.secure_url){
+
+            alert("Cloudinary Upload Failed");
+
+            submitButton.disabled = false;
+            submitButton.innerText = "SUBMIT";
+
+            return;
+
+        }
+
+        const imageUrl =
+            uploadResult.secure_url;
+
+        // =========================
+        // Spreadsheet送信
+        // =========================
+
+        const response =
+            await fetch(
+                SCRIPT_URL,
+                {
+                    method:"POST",
+
+                    body:JSON.stringify({
+
+                        yourName,
+                        assignmentName,
+                        mail,
+                        personnel,
+                        numbering,
+                        playType,
+                        keywords,
+                        otherKeyword,
+                        imageUrl
+
+                    })
+
+                }
+            );
+
         const result =
             await response.json();
 
         console.log(result);
 
-        if(result.secure_url){
+        alert(
+            "Submission Success!"
+        );
 
-            alert(
-                "Upload Success!\n\n" +
-                result.secure_url
-            );
+        // フォーム初期化
 
-        }else{
-
-            console.error(result);
-
-            alert(
-                "Cloudinary Error\n\n" +
-                JSON.stringify(result)
-            );
-
-        }
+        document.getElementById("form").reset();
 
     }catch(error){
 
         console.error(error);
 
         alert(
-            "Upload Failed\n\n" +
+            "Error\n\n" +
             error.message
         );
 
