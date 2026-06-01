@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Services</title>
 
-  <!-- アイコン用 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
@@ -15,7 +14,6 @@
       color: #111;
     }
 
-    /* ▼ ヘッダー */
     header {
       position: relative;
       padding: 20px;
@@ -28,7 +26,6 @@
       letter-spacing: 2px;
     }
 
-    /* ▼ ロゴ（右上固定） */
     .logo {
       position: absolute;
       top: 20px;
@@ -43,7 +40,7 @@
 
     .container {
       padding: 40px;
-      max-width: 900px;
+      max-width: 1200px;
       margin: auto;
     }
 
@@ -70,9 +67,14 @@
       text-decoration: none;
       color: #fff;
       font-weight: bold;
+      font-size: 18px;
     }
 
-    /* ▼ 戻るボタン */
+    .coming-soon {
+      color: #aaa;
+      cursor: default;
+    }
+
     .back {
       display: inline-block;
       margin-top: 40px;
@@ -104,23 +106,44 @@
   <header>
     <h1>Our Services</h1>
 
-    <!-- ▼ ロゴ（クリックでホームへ） -->
     <a href="index.html">
       <img src="Logo_KAXI.png" alt="logo" class="logo">
     </a>
   </header>
 
   <div class="container">
+
     <div class="grid">
+
       <div class="card">
         <a href="kiky.html">Kiky</a>
       </div>
+
       <div class="card">
         <a href="Anri.html">Anri</a>
       </div>
+
       <div class="card">
         <a href="IBMBIGBLUE.html">BIG BLUE</a>
       </div>
+
+      <!-- Coming Soon ×12 -->
+
+      <div class="card">
+  <a href="newpage.html">New Service</a>
+</div>
+      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+      <div class="card"><span class="coming-soon">Coming Soon...</span></div>
+
     </div>
 
     <div class="back-wrapper">
@@ -128,6 +151,7 @@
         <i class="fas fa-arrow-left"></i> Back to Home
       </a>
     </div>
+
   </div>
 
 </body>
