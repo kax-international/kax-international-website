@@ -1,59 +1,65 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>IBM BIG BLUE PLAY SUBMISSION</title>
+<title>Play Submission</title>
 
 <style>
 
 body{
     margin:0;
-    font-family:Arial,sans-serif;
-    background:#f3f3f3;
+    font-family:Arial;
+    background:#f4f4f4;
 }
 
 .container{
     max-width:700px;
-    margin:50px auto;
+    margin:40px auto;
     background:white;
     padding:30px;
     border-radius:10px;
-    box-shadow:0 2px 10px rgba(0,0,0,.15);
+    box-shadow:0 2px 10px rgba(0,0,0,.2);
 }
 
 h1{
     text-align:center;
-    margin-bottom:30px;
 }
 
 label{
     display:block;
     margin-top:20px;
-    margin-bottom:8px;
     font-weight:bold;
 }
 
-input[type="text"]{
+input, select{
     width:100%;
-    padding:12px;
+    padding:10px;
+    margin-top:5px;
     box-sizing:border-box;
 }
 
-input[type="file"]{
-    width:100%;
+.checkbox-group{
+    margin-top:10px;
+}
+
+.checkbox-group label{
+    font-weight:normal;
+    display:block;
+}
+
+.others{
+    margin-top:10px;
 }
 
 button{
-    margin-top:30px;
+    margin-top:25px;
     width:100%;
     padding:15px;
     background:#111;
     color:white;
     border:none;
-    font-size:18px;
+    font-size:16px;
     cursor:pointer;
 }
 
@@ -61,99 +67,126 @@ button:hover{
     background:#333;
 }
 
-#preview{
-    margin-top:20px;
-    text-align:center;
-}
-
-#preview img{
-    max-width:100%;
-    max-height:400px;
-}
-
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>IBM BIG BLUE PLAY SUBMISSION</h1>
+<h1>PLAY SUBMISSION</h1>
 
-    <form id="playForm">
+<form id="form">
 
-        <label>Assignment Name</label>
-        <input type="text" id="assignmentName">
+<!-- NAME -->
+<label>Assignment Name</label>
+<input type="text" id="name">
 
-        <label>Numbering</label>
-        <input type="text" id="numbering">
+<!-- NUMBERING -->
+<label>Numbering</label>
+<select id="numbering">
+<option>No Numbering</option>
+<option>10/11</option><option>12/13</option><option>14/15</option>
+<option>16/17</option><option>18/19</option><option>20/21</option>
+<option>24/25</option><option>26/27</option><option>28/29</option>
+<option>30/31</option><option>32/33</option><option>42/43</option>
+<option>44/45</option><option>46/47</option><option>48/49</option>
+<option>00/01</option><option>02/03</option><option>04/05</option>
+<option>06/07</option><option>08/09</option><option>80/81</option>
+<option>54/55</option><option>60/61</option><option>62/63</option>
+<option>64/65</option><option>66/67</option><option>68/69</option>
+<option>70/71</option><option>72/73</option><option>98/99</option>
+<option>410/411</option><option>310/311</option><option>412/413</option>
+<option>312/313</option><option>416/417</option><option>316/317</option>
+<option>916/917</option>
+</select>
 
-        <label>Play Type</label>
-        <input type="text" id="playType">
+<!-- PLAY TYPE -->
+<label>Play Type</label>
+<select id="playType">
+<option>Inside Run</option>
+<option>Outside Run</option>
+<option>Quick Pass</option>
+<option>3 step Pass</option>
+<option>5 step Pass</option>
+<option>Roll</option>
+<option>PA</option>
+<option>Screen</option>
+<option>Special Play</option>
+</select>
 
-        <label>Personnel</label>
-        <input type="text" id="personnel">
+<!-- PERSONNEL -->
+<label>Personnel</label>
+<select id="personnel">
+<option>White</option>
+<option>Lime</option>
+<option>Sky</option>
+<option>Gray</option>
+<option>Black</option>
+<option>Brown</option>
+</select>
 
-        <label>Keywords</label>
-        <input type="text" id="keywords">
+<!-- KEYWORDS -->
+<label>Keywords</label>
 
-        <label>Upload Image</label>
-        <input
-            type="file"
-            id="imageFile"
-            accept="image/*"
-        >
+<div class="checkbox-group">
+<label><input type="checkbox" value="TB Routes"> TB Routes</label>
+<label><input type="checkbox" value="For Reece/Sunda"> For Reece/Sunda</label>
+<label><input type="checkbox" value="set up PA"> set up PA</label>
+<label><input type="checkbox" value="Roll"> Roll</label>
+<label><input type="checkbox" value="Throwback"> Throwback</label>
+<label><input type="checkbox" value="Boots"> Boots</label>
+<label><input type="checkbox" value="Naked"> Naked</label>
+<label><input type="checkbox" value="RedZone/3rd&short"> RedZone/3rd&short</label>
+<label><input type="checkbox" value="DX"> DX</label>
+<label><input type="checkbox" value="Zone Scheme"> Zone Scheme</label>
+<label><input type="checkbox" value="Gap Scheme"> Gap Scheme</label>
+<label><input type="checkbox" value="Option 12"> Option 12</label>
+<label><input type="checkbox" value="2min"> 2min</label>
+<label><input type="checkbox" value="Marine"> Marine</label>
+<label><input type="checkbox" value="Others"> Others</label>
+</div>
 
-        <div id="preview"></div>
+<input type="text" id="others" class="others" placeholder="Others (if needed)">
 
-        <button type="submit">
-            SUBMIT
-        </button>
+<!-- IMAGE -->
+<label>Image Upload (Cloudinary later)</label>
+<input type="file" id="image">
 
-    </form>
+<button type="submit">SUBMIT</button>
+
+</form>
 
 </div>
 
 <script>
 
-const imageFile =
-document.getElementById("imageFile");
-
-const preview =
-document.getElementById("preview");
-
-imageFile.addEventListener("change",e=>{
-
-    const file =
-    e.target.files[0];
-
-    if(!file) return;
-
-    const reader =
-    new FileReader();
-
-    reader.onload = function(event){
-
-        preview.innerHTML =
-        `<img src="${event.target.result}">`;
-
-    };
-
-    reader.readAsDataURL(file);
-
-});
-
-document
-.getElementById("playForm")
-.addEventListener("submit",e=>{
-
+document.getElementById("form").addEventListener("submit", function(e){
     e.preventDefault();
 
-    alert(
-        "Version 1 Complete\n\nNext Step:\nCloudinary Upload"
-    );
+    const keywords = [];
 
+    document.querySelectorAll(".checkbox-group input:checked")
+    .forEach(cb => {
+        if(cb.value === "Others"){
+            const otherText = document.getElementById("others").value;
+            if(otherText) keywords.push(otherText);
+        } else {
+            keywords.push(cb.value);
+        }
+    });
+
+    const data = {
+        name: document.getElementById("name").value,
+        numbering: document.getElementById("numbering").value,
+        playType: document.getElementById("playType").value,
+        personnel: document.getElementById("personnel").value,
+        keywords: keywords.join(", ")
+    };
+
+    console.log(data);
+
+    alert("Form captured successfully (Next: Cloudinary integration)");
 });
 
 </script>
