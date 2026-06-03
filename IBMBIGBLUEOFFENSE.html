@@ -291,36 +291,33 @@ function render(data){
 
 searchInput.addEventListener("input", () => {
 
-    const keyword =
-        searchInput.value.toLowerCase();
+    const keywords =
+        searchInput.value
+            .toLowerCase()
+            .trim()
+            .split(/\s+/)
+            .filter(k => k !== "");
 
     const filtered =
-        allData.filter(item =>
+        allData.filter(item => {
 
-            item.assignmentName.toLowerCase().includes(keyword)
+            const searchableText = `
+                ${item.assignmentName}
+                ${item.playType}
+                ${item.keywords}
+                ${item.personnel}
+                ${item.numbering}
+            `.toLowerCase();
 
-            ||
+            return keywords.every(keyword =>
+                searchableText.includes(keyword)
+            );
 
-            item.playType.toLowerCase().includes(keyword)
-
-            ||
-
-            item.keywords.toLowerCase().includes(keyword)
-
-            ||
-
-            item.personnel.toLowerCase().includes(keyword)
-
-            ||
-
-            item.numbering.toLowerCase().includes(keyword)
-
-        );
+        });
 
     render(filtered);
 
 });
-
 loadData();
 
 </script>
