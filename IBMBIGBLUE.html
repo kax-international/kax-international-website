@@ -1,41 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-  getAuth,
-  onAuthStateChanged
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey:"AIzaSyDye7DJAsV07vok4Dnm0sQ8GBMZLhelrSc",
-  authDomain:"ibm-big-blue.firebaseapp.com",
-  projectId:"ibm-big-blue"
-};
-
-const app =
-    initializeApp(firebaseConfig);
-
-const auth =
-    getAuth(app);
-
-onAuthStateChanged(auth,user=>{
-
-    if(!user){
-
-        location.href =
-            "offenselogin.html";
-
-    }
-
-});
-
-</script>
+    
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>選択ページ</title>
