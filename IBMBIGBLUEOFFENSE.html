@@ -245,7 +245,7 @@ async function loadData(){
     numbering: cols[5] || "",
     playType: cols[6] || "",
     keywords: cols[7] || "",
-    Free Comment: cols[8] || "",
+    freeComment: cols[8] || "",
     image: cols[9] || ""
 
 };
@@ -284,7 +284,7 @@ function render(data){
                 <img
     src="${item.image}"
     alt="${item.assignmentName}"
->
+    >
             
 
             </div>
@@ -407,7 +407,7 @@ searchInput.addEventListener("input", () => {
                 ${item.assignmentName}
                 ${item.playType}
                 ${item.keywords}
-                ${item.otherKeyword}
+                ${item.FreeComment}
                 ${item.personnel}
                 ${item.numbering}
             `.toLowerCase();
