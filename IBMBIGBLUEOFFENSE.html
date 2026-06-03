@@ -391,6 +391,399 @@ card.addEventListener("click", () => {
 
 }
 
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>IBM BIG BLUE 2026 OFFENSE</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f3f3f3;
+}
+
+header{
+    position:relative;
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+
+.search-area{
+    text-align:center;
+    padding:20px;
+}
+
+#searchInput{
+    width:500px;
+    max-width:90%;
+    padding:12px;
+    font-size:16px;
+    border:1px solid #ccc;
+    border-radius:6px;
+}
+
+#gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(500px,1fr));
+    gap:20px;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+    transition:0.2s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 6px 16px rgba(0,0,0,.2);
+}
+
+.image-container{
+    height:600px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f5f5f5;
+    overflow:hidden;
+    border-bottom:1px solid #ddd;
+}
+
+.image-container img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+}
+
+.info{
+    padding:15px;
+}
+
+.info h2{
+    margin-top:0;
+    margin-bottom:15px;
+}
+
+.info p{
+    margin:8px 0;
+}
+
+    .home-button{
+    position:absolute;
+    top:20px;
+    right:20px;
+    background:white;
+    color:#111;
+    text-decoration:none;
+    padding:10px 18px;
+    border-radius:6px;
+    font-weight:bold;
+    transition:0.2s;
+}
+
+.home-button:hover{
+    background:#ddd;
+}
+    .modal{
+    display:none;
+    position:fixed;
+    z-index:9999;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.85);
+    overflow:auto;
+}
+
+.modal-content{
+    background:white;
+    width:95%;
+    max-width:1600px;
+    margin:20px auto;
+    padding:25px;
+    border-radius:12px;
+}
+
+#modalImage{
+    width:100%;
+    max-height:80vh;
+    object-fit:contain;
+    display:block;
+}
+
+#closeModal{
+    float:right;
+    font-size:40px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+#modalInfo{
+    margin-top:20px;
+    line-height:1.8;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+    <a href="IBMBIGBLUE.html" class="home-button">
+        ← Home
+    </a>
+
+    <h1>IBM BIG BLUE 2026 OFFENSE</h1>
+
+</header>
+
+<div class="search-area">
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search Play Name, Personnel, Keywords..."
+    >
+
+</div>
+
+<div id="gallery">
+
+    Loading...
+
+</div>
+
+<script>
+
+const CSV_URL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2rFzA-udsqKKh5FHf9-naLtllz9qpM6cm9JiugzGLh9FrGSnGbKrfxX0Puf0lzSBI5dxVMTm91Ndn/pub?output=csv";
+
+const gallery = document.getElementById("gallery");
+const searchInput = document.getElementById("searchInput");
+
+let allData = [];
+
+function parseCSVLine(line){
+
+    const result = [];
+    let current = "";
+    let insideQuotes = false;
+
+    for(let i=0;i<line.length;i++){
+
+        const char = line[i];
+
+        if(char === '"'){
+
+            insideQuotes = !insideQuotes;
+
+        }else if(char === "," && !insideQuotes){
+
+            result.push(current);
+            current = "";
+
+        }else{
+
+            current += char;
+
+        }
+    }
+
+    result.push(current);
+
+    return result;
+}
+
+
+
+async function loadData(){
+
+    try{
+
+        const response = await fetch(CSV_URL);
+        const text = await response.text();
+
+        const rows =
+            text
+            .trim()
+            .split("\n");
+
+        allData =
+            rows.slice(1).map(row => {
+
+                const cols = parseCSVLine(row);
+
+                return {
+
+    timestamp: cols[0] || "",
+    yourName: cols[1] || "",
+    assignmentName: cols[2] || "",
+    mail: cols[3] || "",
+
+    personnel: cols[4] || "",
+    numbering: cols[5] || "",
+    playType: cols[6] || "",
+    keywords: cols[7] || "",
+    freeComment: cols[8] || "",
+    image: cols[9] || ""
+
+};
+
+            });
+        allData.reverse();
+
+        render(allData);
+
+    }catch(error){
+
+        console.error(error);
+
+        gallery.innerHTML =
+        "<h2>Failed to load spreadsheet</h2>";
+
+    }
+
+}
+
+function render(data){
+
+    gallery.innerHTML = "";
+
+    data.forEach(item => {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "card";
+
+        card.innerHTML = `
+
+            <div class="image-container">
+
+                <img
+    src="${item.image}"
+    alt="${item.assignmentName}"
+    >
+            
+
+            </div>
+
+            <div class="info">
+
+                <h2>${item.assignmentName}</h2>
+
+                <p>
+                    <strong>Play Type:</strong>
+                    ${item.playType}
+                </p>
+
+                <p>
+                    <strong>Keywords:</strong>
+                    ${item.keywords}
+                </p>
+               
+                <p>
+                    <strong>Numbering:</strong>
+                    ${item.numbering}
+                </p>
+
+                <p>
+                    <strong>Personnel:</strong>
+                    ${item.personnel}
+                </p>
+
+                <p>
+                    <strong>Submitted By:</strong>
+                    ${item.yourName}
+                </p>
+
+                 <p>
+                    <strong>Free Comment:</strong>
+                    ${
+                        item.freeComment
+                        ? item.freeComment.substring(0,100) + "..."
+                        : "-"
+                    }
+                </p>
+
+
+            </div>
+
+        `;
+card.style.cursor = "pointer";
+
+card.addEventListener("click", () => {
+
+    modal.style.display = "block";
+
+    modalImage.src = item.image;
+
+    modalInfo.innerHTML = `
+
+        <h2>${item.assignmentName}</h2>
+
+        <p>
+            <strong>Play Type:</strong>
+            ${item.playType}
+        </p>
+
+        <p>
+            <strong>Keywords:</strong>
+            ${item.keywords}
+        </p>
+
+        <p>
+            <strong>Numbering:</strong>
+            ${item.numbering}
+        </p>
+
+        <p>
+            <strong>Personnel:</strong>
+            ${item.personnel}
+        </p>
+
+        <p>
+            <strong>Submitted By:</strong>
+            ${item.yourName}
+        </p>
+
+        <p>
+            <strong>Free Comment:</strong>
+        </p>
+
+        <div style="
+            white-space:pre-wrap;
+            line-height:1.8;
+            background:#f5f5f5;
+            padding:15px;
+            border-radius:8px;
+        ">
+            ${item.freeComment || "-"}
+        </div>
+
+    `;
+
+});
+        gallery.appendChild(card);
+
+    });
+
+}
+
 searchInput.addEventListener("input", () => {
 
     const keywords =
@@ -452,6 +845,26 @@ window.addEventListener("DOMContentLoaded", () => {
        
 
     loadData();
+
+});
+
+</script>
+
+<div id="modal" class="modal">
+
+    <div class="modal-content">
+
+        <span id="closeModal">&times;</span>
+
+        <img id="modalImage">
+
+        <div id="modalInfo"></div>
+
+    </div>
+
+</div>
+</body>
+</html>
 
 });
 
