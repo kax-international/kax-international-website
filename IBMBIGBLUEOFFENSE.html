@@ -263,6 +263,10 @@ function render(data){
                     <strong>Keywords:</strong>
                     ${item.keywords}
                 </p>
+                <p>
+                    <strong>Other Keywords:</strong>
+                    ${item.otherkeyword}
+                </p>
 
                 <p>
                     <strong>Numbering:</strong>
@@ -305,6 +309,7 @@ searchInput.addEventListener("input", () => {
                 ${item.assignmentName}
                 ${item.playType}
                 ${item.keywords}
+                ${item.otherKeyword}
                 ${item.personnel}
                 ${item.numbering}
             `.toLowerCase();
