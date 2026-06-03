@@ -51,14 +51,48 @@ button:hover{
 <body>
 
 <div class="container">
+
     <h1>IBM BIG BLUE 2026</h1>
 
     <div class="button-group">
-        <button onclick="location.href='IBMBIGBLUEOFFENSE.html'">OFFENSE</button>
-        <button onclick="location.href='teams.html'">Coming Soon...</button>
-        <button onclick="location.href='stats.html'">Coming Soon...</button>
+
+        <button onclick="goOffense()">
+            OFFENSE
+        </button>
+
+        <button onclick="location.href='teams.html'">
+            Coming Soon...
+        </button>
+
+        <button onclick="location.href='stats.html'">
+            Coming Soon...
+        </button>
+
     </div>
+
 </div>
+
+<script>
+
+function goOffense(){
+
+    const password =
+        prompt("Password:");
+
+    if(password === "bigblue2026offense"){
+
+        location.href =
+            "IBMBIGBLUEOFFENSE.html";
+
+    }else if(password !== null){
+
+        alert("Incorrect Password");
+
+    }
+
+}
+
+</script>
 
 </body>
 </html>
