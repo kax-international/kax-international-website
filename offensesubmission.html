@@ -378,6 +378,20 @@ document.getElementById("form").addEventListener("submit", async function(e){
         // =========================
         // Spreadsheet送信
         // =========================
+    console.log("freeComment =", freeComment);
+    console.log(JSON.stringify({
+
+    yourName,
+    assignmentName,
+    mail,
+    personnel,
+    numbering,
+    playType,
+    keywords,
+    freeComment,
+    imageUrl
+
+}));
 
         await fetch(
     SCRIPT_URL,
