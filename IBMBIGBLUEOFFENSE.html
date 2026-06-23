@@ -1,49 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-    <script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-  getAuth,
-  onAuthStateChanged
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey:"AIzaSyDye7DJAsV07vok4Dnm0sQ8GBMZLhelrSc",
-  authDomain:"ibm-big-blue.firebaseapp.com",
-  projectId:"ibm-big-blue"
-};
-
-const app =
-    initializeApp(firebaseConfig);
-
-const auth =
-    getAuth(app);
-
-onAuthStateChanged(auth,user=>{
-
-    if(!user){
-
-        location.href =
-            "offenselogin.html";
-
-    }
-
-});
-
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>IBM BIG BLUE 2026 OFFENSE</title>
+<title>Assignment Map | Athletic Cloud</title>
 
 <style>
-
 body{
     margin:0;
     font-family:Arial,sans-serif;
@@ -54,36 +16,10 @@ header{
     background:#111;
     color:white;
     padding:15px 20px;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:10px;
+    font-weight:bold;
 }
 
-header h1{
-    margin:0;
-    font-size:clamp(1.2rem,3vw,2rem);
-}
-    
-.search-area{
-    text-align:center;
-    padding:20px;
-}
-
-#searchInput{
-    width:500px;
-    max-width:90%;
-    padding:12px;
-    font-size:16px;
-    border:1px solid #ccc;
-    border-radius:6px;
-}
-{
-    box-sizing:border-box;
-}
-
+/* GRID */
 #gallery{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
@@ -91,12 +27,14 @@ header h1{
     padding:20px;
 }
 
+/* CARD */
 .card{
     background:white;
     border-radius:10px;
     overflow:hidden;
     box-shadow:0 2px 8px rgba(0,0,0,.15);
     transition:0.2s;
+    cursor:pointer;
 }
 
 .card:hover{
@@ -104,424 +42,250 @@ header h1{
     box-shadow:0 6px 16px rgba(0,0,0,.2);
 }
 
-.image-container{
-    height:600px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#f5f5f5;
-    overflow:hidden;
-    border-bottom:1px solid #ddd;
-}
-
-.image-container img{
+/* IMAGE */
+.card img{
     width:100%;
-    height:100%;
-    object-fit:contain;
-    display:block;
+    height:220px;
+    object-fit:cover;
+    background:#eee;
 }
 
+/* INFO */
 .info{
     padding:15px;
 }
 
-.info h2{
-    margin-top:0;
-    margin-bottom:15px;
-}
-
-.info p{
-    margin:8px 0;
-}
-
-  .home-button{
-    background:white;
-    color:#111;
-    text-decoration:none;
-    padding:10px 16px;
-    border-radius:6px;
+.title{
+    font-size:18px;
     font-weight:bold;
-    white-space:nowrap;
+    margin-bottom:8px;
 }
 
-.home-button:hover{
-    background:#ddd;
+.meta{
+    font-size:13px;
+    color:#666;
+    line-height:1.6;
 }
-    .modal{
+
+/* MODAL */
+.modal{
     display:none;
     position:fixed;
-    z-index:9999;
-    left:0;
     top:0;
+    left:0;
     width:100%;
     height:100%;
-    background:rgba(0,0,0,.85);
+    background:rgba(0,0,0,0.85);
     overflow:auto;
 }
 
 .modal-content{
     background:white;
     width:95%;
-    max-width:1600px;
+    max-width:1200px;
     margin:20px auto;
-    padding:25px;
+    padding:20px;
     border-radius:12px;
 }
 
 #modalImage{
     width:100%;
-    max-height:80vh;
+    max-height:70vh;
     object-fit:contain;
-    display:block;
+    background:#000;
 }
 
-#closeModal{
+#close{
     float:right;
-    font-size:40px;
-    font-weight:bold;
+    font-size:32px;
     cursor:pointer;
 }
 
-#modalInfo{
+.video{
+    width:100%;
     margin-top:20px;
-    line-height:1.8;
-}
-
-#modalInfo{
-    margin-top:20px;
-    line-height:1.8;
-}
-
-/* スマホ対応 */
-@media (max-width:768px){
-
-    header{
-        flex-direction:column;
-        text-align:center;
-    }
-
-    .home-button{
-        width:90%;
-        max-width:250px;
-        text-align:center;
-    }
-
-    #gallery{
-        grid-template-columns:1fr;
-        padding:10px;
-    }
-
-    .image-container{
-        height:auto;
-    }
-
-    .image-container img{
-        height:auto;
-        max-height:500px;
-    }
-
+    border-radius:10px;
 }
 </style>
-
 </head>
 
 <body>
 
 <header>
-
-    <h1>IBM BIG BLUE 2026 OFFENSE</h1>
-
-    <a href="IBMBIGBLUE.html" class="home-button">
-        ← Home
-    </a>
-
+    ATHLETIC CLOUD - BIG BLUE STYLE MAP
 </header>
 
-<div class="search-area">
+<div id="gallery">Loading...</div>
 
-    <input
-        type="text"
-        id="searchInput"
-        placeholder="Search Play Name, Personnel, Keywords..."
-    >
-
-</div>
-
-<div id="gallery">
-
-    Loading...
-
-</div>
-
-
-<div id="modal" class="modal">
+<!-- MODAL -->
+<div class="modal" id="modal">
     <div class="modal-content">
-        <span id="closeModal">&times;</span>
+        <span id="close">&times;</span>
 
         <img id="modalImage">
 
         <div id="modalInfo"></div>
+
+        <div id="modalVideo"></div>
     </div>
 </div>
 
-<script>
-const modal = document.getElementById("modal");
-const modalImage = document.getElementById("modalImage");
-const modalInfo = document.getElementById("modalInfo");
-const closeModal = document.getElementById("closeModal");
-    
-const CSV_URL =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2rFzA-udsqKKh5FHf9-naLtllz9qpM6cm9JiugzGLh9FrGSnGbKrfxX0Puf0lzSBI5dxVMTm91Ndn/pub?output=csv";
+<script type="module">
 
-const gallery = document.getElementById("gallery");
-const searchInput = document.getElementById("searchInput");
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    query,
+    where
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
+import { getAuth, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
+const firebaseConfig = {
+    apiKey: "AIzaSyBzAHkf9LIYgCxx9sV5WvUqaxwmIWnLc8Q",
+    authDomain: "athletic-cloud-33538.firebaseapp.com",
+    projectId: "athletic-cloud-33538"
+};
 
-let allData = [];
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-function parseCSVLine(line){
+const params = new URLSearchParams(location.search);
+const assignmentId = params.get("id");
 
-    const result = [];
-    let current = "";
-    let insideQuotes = false;
+let responses = [];
 
-    for(let i=0;i<line.length;i++){
+/* AUTH */
+onAuthStateChanged(auth, async (user) => {
+    if(!user){
+        location.href = "login.html";
+        return;
+    }
 
-        const char = line[i];
+    await load();
+});
 
-        if(char === '"'){
+/* LOAD DATA */
+async function load(){
 
-            insideQuotes = !insideQuotes;
+    const q = query(
+        collection(db, "assignmentResponses"),
+        where("assignmentId", "==", assignmentId)
+    );
 
-        }else if(char === "," && !insideQuotes){
+    const snap = await getDocs(q);
 
-            result.push(current);
-            current = "";
+    responses = [];
 
-        }else{
+    snap.forEach(d => {
+        responses.push({
+            id: d.id,
+            ...d.data()
+        });
+    });
 
-            current += char;
+    render();
+}
 
+/* GET FIRST IMAGE */
+function getImage(r){
+    for(const k in r.answers){
+        const v = r.answers[k];
+        if(typeof v === "string" && v.startsWith("http")){
+            return v;
+        }
+    }
+    return "https://via.placeholder.com/600x400?text=No+Image";
+}
+
+/* TITLE = Q0 */
+function getTitle(r){
+    return r.answers?.[0] || r.userName || "Untitled";
+}
+
+/* RENDER GRID */
+function render(){
+
+    const gallery = document.getElementById("gallery");
+    gallery.innerHTML = "";
+
+    responses.forEach(r => {
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const img = getImage(r);
+        const title = getTitle(r);
+
+        card.innerHTML = `
+            <img src="${img}">
+            <div class="info">
+                <div class="title">${title}</div>
+                <div class="meta">
+                    ${r.userName || ""}<br>
+                    ${new Date(r.createdAt?.seconds*1000 || Date.now()).toLocaleString()}
+                </div>
+            </div>
+        `;
+
+        card.onclick = () => openModal(r);
+
+        gallery.appendChild(card);
+    });
+}
+
+/* MODAL */
+function openModal(r){
+
+    const modal = document.getElementById("modal");
+    const img = document.getElementById("modalImage");
+    const info = document.getElementById("modalInfo");
+    const video = document.getElementById("modalVideo");
+
+    img.src = getImage(r);
+
+    let html = `<h2>${getTitle(r)}</h2>`;
+
+    for(const k in r.answers){
+        html += `<p><b>Q${k}:</b> ${JSON.stringify(r.answers[k])}</p>`;
+    }
+
+    info.innerHTML = html;
+
+    /* video (最後に表示) */
+    let videoHtml = "";
+
+    for(const k in r.answers){
+        const v = r.answers[k];
+        if(typeof v === "string" && v.includes("video")){
+            videoHtml += `
+                <video class="video" controls>
+                    <source src="${v}">
+                </video>
+            `;
         }
     }
 
-    result.push(current);
+    video.innerHTML = videoHtml;
 
-    return result;
+    modal.style.display = "block";
 }
 
-async function loadData(){
+document.getElementById("close").onclick = () => {
+    document.getElementById("modal").style.display = "none";
+};
 
-    try{
-
-        const response = await fetch(CSV_URL);
-        const text = await response.text();
-
-        const rows = text.trim().split(/\r?\n/);
-        allData = rows.slice(1).map(row => {
-
-            const cols = parseCSVLine(row);
-
-            return {
-
-                timestamp: cols[0] || "",
-                yourName: cols[1] || "",
-                assignmentName: cols[2] || "",
-                mail: cols[3] || "",
-                personnel: cols[4] || "",
-                numbering: cols[5] || "",
-                playType: cols[6] || "",
-                keywords: cols[7] || "",
-                freeComment: cols[8] || "",
-                image: cols[9] || ""
-
-            };
-
-        });
-
-        allData.reverse();
-
-        render(allData);
-
-    }catch(error){
-
-        console.error(error);
-
-        gallery.innerHTML =
-            "<h2>Failed to load spreadsheet</h2>";
-
+window.onclick = (e) => {
+    if(e.target.id === "modal"){
+        document.getElementById("modal").style.display = "none";
     }
-
-}
-
-function render(data){
-
-    gallery.innerHTML = "";
-
-    data.forEach(item => {
-
-        const card = document.createElement("div");
-
-        card.className = "card";
-
-        card.innerHTML = `
-
-            <div class="image-container">
-                <img
-                    src="${item.image}"
-                    alt="${item.assignmentName}"
-                >
-            </div>
-
-            <div class="info">
-
-                <h2>${item.assignmentName}</h2>
-
-                <p>
-                    <strong>Play Type:</strong>
-                    ${item.playType}
-                </p>
-
-                <p>
-                    <strong>Keywords:</strong>
-                    ${item.keywords}
-                </p>
-
-                <p>
-                    <strong>Numbering:</strong>
-                    ${item.numbering}
-                </p>
-
-                <p>
-                    <strong>Personnel:</strong>
-                    ${item.personnel}
-                </p>
-
-                <p>
-                    <strong>Submitted By:</strong>
-                    ${item.yourName}
-                </p>
-
-                <p>
-                    <strong>Free Comment:</strong>
-                    ${
-                        item.freeComment
-                        ? item.freeComment.substring(0,100) + "..."
-                        : "-"
-                    }
-                </p>
-
-            </div>
-
-        `;
-
-        card.style.cursor = "pointer";
-
-        card.addEventListener("click", () => {
-
-            modal.style.display = "block";
-
-            modalImage.src = item.image;
-
-            modalInfo.innerHTML = `
-
-                <h2>${item.assignmentName}</h2>
-
-                <p>
-                    <strong>Play Type:</strong>
-                    ${item.playType}
-                </p>
-
-                <p>
-                    <strong>Keywords:</strong>
-                    ${item.keywords}
-                </p>
-
-                <p>
-                    <strong>Numbering:</strong>
-                    ${item.numbering}
-                </p>
-
-                <p>
-                    <strong>Personnel:</strong>
-                    ${item.personnel}
-                </p>
-
-                <p>
-                    <strong>Submitted By:</strong>
-                    ${item.yourName}
-                </p>
-
-                <p>
-                    <strong>Free Comment:</strong>
-                </p>
-
-                <div style="
-                    white-space:pre-wrap;
-                    line-height:1.8;
-                    background:#f5f5f5;
-                    padding:15px;
-                    border-radius:8px;
-                ">
-                    ${item.freeComment || "-"}
-                </div>
-
-            `;
-
-        });
-
-        gallery.appendChild(card);
-
-    });
-
-}
-
-searchInput.addEventListener("input", () => {
-
-    const keywords =
-        searchInput.value
-            .toLowerCase()
-            .trim()
-            .split(/\s+/)
-            .filter(k => k !== "");
-
-    const filtered =
-        allData.filter(item => {
-
-            const searchableText = `
-                ${item.assignmentName}
-                ${item.playType}
-                ${item.keywords}
-                ${item.freeComment}
-                ${item.personnel}
-                ${item.numbering}
-            `.toLowerCase();
-
-            return keywords.every(keyword =>
-                searchableText.includes(keyword)
-            );
-
-        });
-
-    render(filtered);
-
-});
-
-
-
-closeModal.addEventListener("click", () => {
-    modal.style.display = "none";
-});
-
-window.addEventListener("click", e => {
-    if(e.target === modal){
-        modal.style.display = "none";
-    }
-});
-
-loadData();
+};
 
 </script>
+
 </body>
 </html>
