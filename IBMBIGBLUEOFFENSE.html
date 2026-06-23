@@ -1,11 +1,49 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
+    <script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyDye7DJAsV07vok4Dnm0sQ8GBMZLhelrSc",
+  authDomain:"ibm-big-blue.firebaseapp.com",
+  projectId:"ibm-big-blue"
+};
+
+const app =
+    initializeApp(firebaseConfig);
+
+const auth =
+    getAuth(app);
+
+onAuthStateChanged(auth,user=>{
+
+    if(!user){
+
+        location.href =
+            "offenselogin.html";
+
+    }
+
+});
+
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Assignment Map | Athletic Cloud</title>
+
+<title>IBM BIG BLUE 2026 OFFENSE</title>
 
 <style>
+
 body{
     margin:0;
     font-family:Arial,sans-serif;
@@ -16,10 +54,36 @@ header{
     background:#111;
     color:white;
     padding:15px 20px;
-    font-weight:bold;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
 }
 
-/* GRID */
+header h1{
+    margin:0;
+    font-size:clamp(1.2rem,3vw,2rem);
+}
+    
+.search-area{
+    text-align:center;
+    padding:20px;
+}
+
+#searchInput{
+    width:500px;
+    max-width:90%;
+    padding:12px;
+    font-size:16px;
+    border:1px solid #ccc;
+    border-radius:6px;
+}
+{
+    box-sizing:border-box;
+}
+
 #gallery{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
@@ -27,14 +91,12 @@ header{
     padding:20px;
 }
 
-/* CARD */
 .card{
     background:white;
     border-radius:10px;
     overflow:hidden;
     box-shadow:0 2px 8px rgba(0,0,0,.15);
     transition:0.2s;
-    cursor:pointer;
 }
 
 .card:hover{
@@ -42,250 +104,424 @@ header{
     box-shadow:0 6px 16px rgba(0,0,0,.2);
 }
 
-/* IMAGE */
-.card img{
-    width:100%;
-    height:220px;
-    object-fit:cover;
-    background:#eee;
+.image-container{
+    height:600px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f5f5f5;
+    overflow:hidden;
+    border-bottom:1px solid #ddd;
 }
 
-/* INFO */
+.image-container img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+}
+
 .info{
     padding:15px;
 }
 
-.title{
-    font-size:18px;
+.info h2{
+    margin-top:0;
+    margin-bottom:15px;
+}
+
+.info p{
+    margin:8px 0;
+}
+
+  .home-button{
+    background:white;
+    color:#111;
+    text-decoration:none;
+    padding:10px 16px;
+    border-radius:6px;
     font-weight:bold;
-    margin-bottom:8px;
+    white-space:nowrap;
 }
 
-.meta{
-    font-size:13px;
-    color:#666;
-    line-height:1.6;
+.home-button:hover{
+    background:#ddd;
 }
-
-/* MODAL */
-.modal{
+    .modal{
     display:none;
     position:fixed;
-    top:0;
+    z-index:9999;
     left:0;
+    top:0;
     width:100%;
     height:100%;
-    background:rgba(0,0,0,0.85);
+    background:rgba(0,0,0,.85);
     overflow:auto;
 }
 
 .modal-content{
     background:white;
     width:95%;
-    max-width:1200px;
+    max-width:1600px;
     margin:20px auto;
-    padding:20px;
+    padding:25px;
     border-radius:12px;
 }
 
 #modalImage{
     width:100%;
-    max-height:70vh;
+    max-height:80vh;
     object-fit:contain;
-    background:#000;
+    display:block;
 }
 
-#close{
+#closeModal{
     float:right;
-    font-size:32px;
+    font-size:40px;
+    font-weight:bold;
     cursor:pointer;
 }
 
-.video{
-    width:100%;
+#modalInfo{
     margin-top:20px;
-    border-radius:10px;
+    line-height:1.8;
+}
+
+#modalInfo{
+    margin-top:20px;
+    line-height:1.8;
+}
+
+/* スマホ対応 */
+@media (max-width:768px){
+
+    header{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .home-button{
+        width:90%;
+        max-width:250px;
+        text-align:center;
+    }
+
+    #gallery{
+        grid-template-columns:1fr;
+        padding:10px;
+    }
+
+    .image-container{
+        height:auto;
+    }
+
+    .image-container img{
+        height:auto;
+        max-height:500px;
+    }
+
 }
 </style>
+
 </head>
 
 <body>
 
 <header>
-    ATHLETIC CLOUD - BIG BLUE STYLE MAP
+
+    <h1>IBM BIG BLUE 2026 OFFENSE</h1>
+
+    <a href="IBMBIGBLUE.html" class="home-button">
+        ← Home
+    </a>
+
 </header>
 
-<div id="gallery">Loading...</div>
+<div class="search-area">
 
-<!-- MODAL -->
-<div class="modal" id="modal">
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search Play Name, Personnel, Keywords..."
+    >
+
+</div>
+
+<div id="gallery">
+
+    Loading...
+
+</div>
+
+
+<div id="modal" class="modal">
     <div class="modal-content">
-        <span id="close">&times;</span>
+        <span id="closeModal">&times;</span>
 
         <img id="modalImage">
 
         <div id="modalInfo"></div>
-
-        <div id="modalVideo"></div>
     </div>
 </div>
 
-<script type="module">
+<script>
+const modal = document.getElementById("modal");
+const modalImage = document.getElementById("modalImage");
+const modalInfo = document.getElementById("modalInfo");
+const closeModal = document.getElementById("closeModal");
+    
+const CSV_URL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2rFzA-udsqKKh5FHf9-naLtllz9qpM6cm9JiugzGLh9FrGSnGbKrfxX0Puf0lzSBI5dxVMTm91Ndn/pub?output=csv";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import {
-    getFirestore,
-    collection,
-    getDocs,
-    query,
-    where
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+const gallery = document.getElementById("gallery");
+const searchInput = document.getElementById("searchInput");
 
-import { getAuth, onAuthStateChanged }
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBzAHkf9LIYgCxx9sV5WvUqaxwmIWnLc8Q",
-    authDomain: "athletic-cloud-33538.firebaseapp.com",
-    projectId: "athletic-cloud-33538"
-};
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+let allData = [];
 
-const params = new URLSearchParams(location.search);
-const assignmentId = params.get("id");
+function parseCSVLine(line){
 
-let responses = [];
+    const result = [];
+    let current = "";
+    let insideQuotes = false;
 
-/* AUTH */
-onAuthStateChanged(auth, async (user) => {
-    if(!user){
-        location.href = "login.html";
-        return;
-    }
+    for(let i=0;i<line.length;i++){
 
-    await load();
-});
+        const char = line[i];
 
-/* LOAD DATA */
-async function load(){
+        if(char === '"'){
 
-    const q = query(
-        collection(db, "assignmentResponses"),
-        where("assignmentId", "==", assignmentId)
-    );
+            insideQuotes = !insideQuotes;
 
-    const snap = await getDocs(q);
+        }else if(char === "," && !insideQuotes){
 
-    responses = [];
+            result.push(current);
+            current = "";
 
-    snap.forEach(d => {
-        responses.push({
-            id: d.id,
-            ...d.data()
-        });
-    });
+        }else{
 
-    render();
-}
+            current += char;
 
-/* GET FIRST IMAGE */
-function getImage(r){
-    for(const k in r.answers){
-        const v = r.answers[k];
-        if(typeof v === "string" && v.startsWith("http")){
-            return v;
         }
     }
-    return "https://via.placeholder.com/600x400?text=No+Image";
+
+    result.push(current);
+
+    return result;
 }
 
-/* TITLE = Q0 */
-function getTitle(r){
-    return r.answers?.[0] || r.userName || "Untitled";
+async function loadData(){
+
+    try{
+
+        const response = await fetch(CSV_URL);
+        const text = await response.text();
+
+        const rows = text.trim().split(/\r?\n/);
+        allData = rows.slice(1).map(row => {
+
+            const cols = parseCSVLine(row);
+
+            return {
+
+                timestamp: cols[0] || "",
+                yourName: cols[1] || "",
+                assignmentName: cols[2] || "",
+                mail: cols[3] || "",
+                personnel: cols[4] || "",
+                numbering: cols[5] || "",
+                playType: cols[6] || "",
+                keywords: cols[7] || "",
+                freeComment: cols[8] || "",
+                image: cols[9] || ""
+
+            };
+
+        });
+
+        allData.reverse();
+
+        render(allData);
+
+    }catch(error){
+
+        console.error(error);
+
+        gallery.innerHTML =
+            "<h2>Failed to load spreadsheet</h2>";
+
+    }
+
 }
 
-/* RENDER GRID */
-function render(){
+function render(data){
 
-    const gallery = document.getElementById("gallery");
     gallery.innerHTML = "";
 
-    responses.forEach(r => {
+    data.forEach(item => {
 
         const card = document.createElement("div");
+
         card.className = "card";
 
-        const img = getImage(r);
-        const title = getTitle(r);
-
         card.innerHTML = `
-            <img src="${img}">
-            <div class="info">
-                <div class="title">${title}</div>
-                <div class="meta">
-                    ${r.userName || ""}<br>
-                    ${new Date(r.createdAt?.seconds*1000 || Date.now()).toLocaleString()}
-                </div>
+
+            <div class="image-container">
+                <img
+                    src="${item.image}"
+                    alt="${item.assignmentName}"
+                >
             </div>
+
+            <div class="info">
+
+                <h2>${item.assignmentName}</h2>
+
+                <p>
+                    <strong>Play Type:</strong>
+                    ${item.playType}
+                </p>
+
+                <p>
+                    <strong>Keywords:</strong>
+                    ${item.keywords}
+                </p>
+
+                <p>
+                    <strong>Numbering:</strong>
+                    ${item.numbering}
+                </p>
+
+                <p>
+                    <strong>Personnel:</strong>
+                    ${item.personnel}
+                </p>
+
+                <p>
+                    <strong>Submitted By:</strong>
+                    ${item.yourName}
+                </p>
+
+                <p>
+                    <strong>Free Comment:</strong>
+                    ${
+                        item.freeComment
+                        ? item.freeComment.substring(0,100) + "..."
+                        : "-"
+                    }
+                </p>
+
+            </div>
+
         `;
 
-        card.onclick = () => openModal(r);
+        card.style.cursor = "pointer";
+
+        card.addEventListener("click", () => {
+
+            modal.style.display = "block";
+
+            modalImage.src = item.image;
+
+            modalInfo.innerHTML = `
+
+                <h2>${item.assignmentName}</h2>
+
+                <p>
+                    <strong>Play Type:</strong>
+                    ${item.playType}
+                </p>
+
+                <p>
+                    <strong>Keywords:</strong>
+                    ${item.keywords}
+                </p>
+
+                <p>
+                    <strong>Numbering:</strong>
+                    ${item.numbering}
+                </p>
+
+                <p>
+                    <strong>Personnel:</strong>
+                    ${item.personnel}
+                </p>
+
+                <p>
+                    <strong>Submitted By:</strong>
+                    ${item.yourName}
+                </p>
+
+                <p>
+                    <strong>Free Comment:</strong>
+                </p>
+
+                <div style="
+                    white-space:pre-wrap;
+                    line-height:1.8;
+                    background:#f5f5f5;
+                    padding:15px;
+                    border-radius:8px;
+                ">
+                    ${item.freeComment || "-"}
+                </div>
+
+            `;
+
+        });
 
         gallery.appendChild(card);
+
     });
+
 }
 
-/* MODAL */
-function openModal(r){
+searchInput.addEventListener("input", () => {
 
-    const modal = document.getElementById("modal");
-    const img = document.getElementById("modalImage");
-    const info = document.getElementById("modalInfo");
-    const video = document.getElementById("modalVideo");
+    const keywords =
+        searchInput.value
+            .toLowerCase()
+            .trim()
+            .split(/\s+/)
+            .filter(k => k !== "");
 
-    img.src = getImage(r);
+    const filtered =
+        allData.filter(item => {
 
-    let html = `<h2>${getTitle(r)}</h2>`;
+            const searchableText = `
+                ${item.assignmentName}
+                ${item.playType}
+                ${item.keywords}
+                ${item.freeComment}
+                ${item.personnel}
+                ${item.numbering}
+            `.toLowerCase();
 
-    for(const k in r.answers){
-        html += `<p><b>Q${k}:</b> ${JSON.stringify(r.answers[k])}</p>`;
+            return keywords.every(keyword =>
+                searchableText.includes(keyword)
+            );
+
+        });
+
+    render(filtered);
+
+});
+
+
+
+closeModal.addEventListener("click", () => {
+    modal.style.display = "none";
+});
+
+window.addEventListener("click", e => {
+    if(e.target === modal){
+        modal.style.display = "none";
     }
+});
 
-    info.innerHTML = html;
-
-    /* video (最後に表示) */
-    let videoHtml = "";
-
-    for(const k in r.answers){
-        const v = r.answers[k];
-        if(typeof v === "string" && v.includes("video")){
-            videoHtml += `
-                <video class="video" controls>
-                    <source src="${v}">
-                </video>
-            `;
-        }
-    }
-
-    video.innerHTML = videoHtml;
-
-    modal.style.display = "block";
-}
-
-document.getElementById("close").onclick = () => {
-    document.getElementById("modal").style.display = "none";
-};
-
-window.onclick = (e) => {
-    if(e.target.id === "modal"){
-        document.getElementById("modal").style.display = "none";
-    }
-};
+loadData();
 
 </script>
-
 </body>
 </html>
