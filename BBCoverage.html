@@ -1,1 +1,485 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全45種カバレッジ シミュレーター (新分類対応版)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg-color: #f0f4f8;
+        --card-bg: #ffffff;
+        --text-main: #1e293b;
+        --text-sub: #475569;
+        --primary: #3b82f6;
+        --primary-hover: #2563eb;
+        --accent: #e74c3c;
+        --accent-hover: #c0392b;
+        --field-green1: #2E7D32;
+    }
 
+    body {
+        font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        background-color: var(--bg-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 20px 10px;
+        color: var(--text-main);
+    }
+
+    h2 { 
+        margin: 0 0 15px 0; 
+        color: var(--text-main); 
+        font-size: 18px; 
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .controls-container {
+        display: flex;
+        flex-direction: column; 
+        gap: 10px;
+        background: var(--card-bg);
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        margin-bottom: 15px;
+        width: 100%;
+        max-width: 600px;
+        box-sizing: border-box;
+    }
+    
+    @media (min-width: 480px) {
+        .controls-container {
+            flex-direction: row; 
+        }
+    }
+
+    .action-group {
+        display: flex;
+        gap: 8px;
+        width: 100%;
+    }
+
+    select {
+        flex-grow: 1;
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 15px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        outline: none;
+        background-color: #f8fafc;
+        color: var(--text-main);
+        font-family: inherit;
+        font-weight: 500;
+    }
+
+    button {
+        padding: 10px 15px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        white-space: nowrap;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .btn-apply { background-color: var(--primary); }
+    .btn-reset { background-color: var(--accent); }
+
+    .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 15px;
+        font-size: 11px;
+        font-weight: 600;
+        background: var(--card-bg);
+        padding: 10px 15px;
+        border-radius: 12px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        color: var(--text-sub);
+        width: 100%;
+        max-width: 600px;
+        box-sizing: border-box;
+    }
+    .legend span { display: flex; align-items: center; gap: 4px; }
+    .legend span::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+    .c-man::before { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+    .c-zone::before { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+    .c-match::before { background: linear-gradient(135deg, #a855f7, #7e22ce); }
+    .c-blitz::before { background: linear-gradient(135deg, #f59e0b, #b45309); }
+    .c-special::before { background: linear-gradient(135deg, #22c55e, #15803d); }
+
+    .field-container { 
+        position: relative; 
+        border-radius: 8px;
+        padding: 4px;
+        background: #ffffff;
+        box-shadow: 0 8px 20px -5px rgba(0, 0, 0, 0.15);
+        width: 100%;
+        max-width: 600px;
+        box-sizing: border-box;
+    }
+    .field {
+        width: 100%;
+        height: 66.66vw;
+        max-height: 400px;
+        background-color: var(--field-green1);
+        background-image: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 10%,
+            rgba(0,0,0,0.05) 10%,
+            rgba(0,0,0,0.05) 20%
+        );
+        border: 2px solid #ffffff;
+        position: relative;
+        overflow: hidden;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    
+    .line { position: absolute; width: 100%; height: 2px; background: rgba(255,255,255,0.3); }
+    .los { top: 60%; height: 3px; background: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.6); z-index: 1;}
+    
+    .hash-line {
+        position: absolute; width: 2px; height: 100%; 
+        background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.4) 0, rgba(255,255,255,0.4) 3%, transparent 3%, transparent 6%);
+    }
+    .hash-left { left: 35%; }
+    .hash-right { left: 65%; }
+
+    .field-label {
+        position: absolute; top: 10px; font-size: 16px; font-weight: 800; color: rgba(255,255,255,0.3); z-index: 0; pointer-events: none;
+        text-transform: uppercase; letter-spacing: 1px;
+    }
+    .label-boundary { left: 5%; }
+    .label-field { left: 45%; }
+    
+    .player {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        color: white;
+        transform: translate(-50%, -50%);
+        transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 3px 5px rgba(0,0,0,0.4), inset 0 2px 3px rgba(255,255,255,0.3);
+        border: 2px solid rgba(255,255,255,0.9);
+        z-index: 5;
+    }
+    
+    .offense { background: linear-gradient(135deg, #334155, #0f172a); z-index: 6;}
+    .defense { z-index: 10; }
+    .defense.man { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+    .defense.zone { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+    .defense.match { background: linear-gradient(135deg, #a855f7, #7e22ce); }
+    .defense.blitz { background: linear-gradient(135deg, #fbbf24, #d97706); color: #fff;}
+    .defense.special { background: linear-gradient(135deg, #22c55e, #15803d); }
+
+    .football {
+        position: absolute;
+        width: 10px;
+        height: 14px;
+        background: linear-gradient(135deg, #8b4513, #5c2c09);
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.8);
+        transform: translate(-50%, -50%);
+        box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        z-index: 7;
+    }
+
+    .role-label {
+        position: absolute;
+        bottom: -16px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 8px;
+        background: rgba(255,255,255,0.95);
+        color: var(--text-main);
+        padding: 2px 4px;
+        border-radius: 4px;
+        white-space: nowrap;
+        font-weight: 700;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        pointer-events: none;
+        border: 1px solid #e2e8f0;
+    }
+
+    .description {
+        margin-top: 15px;
+        padding: 15px;
+        background: var(--card-bg);
+        border-left: 5px solid var(--primary);
+        width: 100%;
+        max-width: 600px;
+        box-sizing: border-box;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        line-height: 1.6;
+        font-size: 13px;
+    }
+    .play-title { 
+        font-weight: 800; 
+        font-size: 15px; 
+        color: var(--primary); 
+        margin-bottom: 8px; 
+        display: block; 
+        border-bottom: 2px solid #f1f5f9; 
+        padding-bottom: 6px; 
+    }
+    .play-detail { margin-top: 8px; color: var(--text-sub); font-weight: 500;}
+    .play-detail strong { color: var(--text-main); font-weight: 700;}
+
+    @media (max-width: 500px) {
+        .player { width: 22px; height: 22px; font-size: 9px; }
+        .role-label { font-size: 7px; bottom: -14px; padding: 1px 3px; }
+        .football { width: 8px; height: 12px; }
+        .field-label { font-size: 14px; }
+    }
+</style>
+</head>
+<body>
+
+<h2>🏈 カバレッジ シミュレーター</h2>
+
+<div class="controls-container">
+    <select id="playSelect">
+        <option value="0">--- プレ・スナップ (初期配置) ---</option>
+        <optgroup label="① BASE COVER">
+            <option value="1">COVER 0</option>
+            <option value="2">COVER 2</option>
+            <option value="3">- TAMPA 2</option>
+            <option value="4">- DBL SKY (CB deepのCOVER 2)</option>
+            <option value="5">COVER 3</option>
+            <option value="6">- BLIND</option>
+            <option value="7">- ROBBER (Boundary Buzz)</option>
+            <option value="8">- BUZZ (Field Buzz)</option>
+            <option value="9">- ROLL</option>
+            <option value="10">- CLOUD</option>
+            <option value="11">COVER 4</option>
+            <option value="12">- PALMS (2READ)</option>
+            <option value="13">- 24 (field2/boundary4)</option>
+            <option value="14">- 40 (field4/boundary0)</option>
+        </optgroup>
+        <optgroup label="② OTHER COVER">
+            <option value="15">TRIANGLE</option>
+            <option value="16">BOX</option>
+            <option value="17">7 UNDER</option>
+        </optgroup>
+        <optgroup label="③ MM (Man-to-Man)">
+            <option value="18">1 FREE MM</option>
+            <option value="19">- 1 FREE HOLE</option>
+            <option value="20">2 FREE MM</option>
+        </optgroup>
+        <optgroup label="④ COVER TECH">
+            <option value="21">POACH / SOLO</option>
+            <option value="22">MEG</option>
+            <option value="23">MES</option>
+            <option value="24">BAIL</option>
+            <option value="25">WALL</option>
+            <option value="26">SINK</option>
+            <option value="27">BLANKET</option>
+            <option value="28">ZONE BLITZ</option>
+        </optgroup>
+        <optgroup label="⑤ WORD">
+            <option value="29">MOFO (Middle Of Field Open)</option>
+            <option value="30">MOFC (Middle Of Field Close)</option>
+            <option value="31">DIME (SF3枚が後ろに並ぶ形)</option>
+        </optgroup>
+    </select>
+    <div class="action-group">
+        <button class="btn-apply" onclick="executePlay()">反映</button>
+        <button class="btn-reset" onclick="document.getElementById('playSelect').value='0'; executePlay();">リセット</button>
+    </div>
+</div>
+
+<div class="legend">
+    <span class="c-man">マンツーマン</span>
+    <span class="c-zone">ゾーンカバー</span>
+    <span class="c-match">パターンマッチ</span>
+    <span class="c-blitz">ブリッツ</span>
+    <span class="c-special">特殊役割</span>
+</div>
+
+<div class="field-container">
+    <div class="field">
+        <div class="field-label label-boundary">Boundary</div>
+        <div class="field-label label-field">Field</div>
+        
+        <div class="line" style="top: 10%;"></div>
+        <div class="line" style="top: 35%;"></div>
+        <div class="line los"></div>
+        <div class="line" style="top: 85%;"></div>
+        
+        <div class="hash-line hash-left"></div>
+        <div class="hash-line hash-right"></div>
+
+        <div class="football" style="left: 35%; top: 62%;"></div>
+        <div class="player offense" id="offC" style="left: 35%; top: 66%;">C</div>
+        <div class="player offense" id="qb" style="left: 35%; top: 75%;">QB</div>
+        <div class="player offense" id="off1" style="left: 10%; top: 64%;">X</div>
+        <div class="player offense" id="off2" style="left: 20%; top: 64%;">H</div>
+        <div class="player offense" id="off3" style="left: 65%; top: 64%;">I</div>
+        <div class="player offense" id="off4" style="left: 85%; top: 64%;">Z</div>
+        <div class="player offense" id="off5" style="left: 27%; top: 75%;">T</div>
+
+        <div class="player defense" id="cb1" style="left: 10%; top: 45%;">CB</div>
+        <div class="player defense" id="cb2" style="left: 85%; top: 45%;">CB</div>
+        <div class="player defense" id="fs" style="left: 65%; top: 20%;">FS</div>
+        <div class="player defense" id="ss" style="left: 20%; top: 20%;">SS</div>
+        <div class="player defense" id="mlb" style="left: 35%; top: 50%;">MLB</div>
+        <div class="player defense" id="olb1" style="left: 26%; top: 49%;">W</div>
+        <div class="player defense" id="olb2" style="left: 66%; top: 51%;">N</div>
+    </div>
+</div>
+
+<div class="description" id="descText">
+    <span class="play-title">プレ・スナップ (初期配置)</span>
+    <div class="play-detail">メニューから戦術を選び、「反映」ボタンを押すとディフェンスが移動します。</div>
+</div>
+
+<script>
+    // 座標: c:[CB1(Bound), CB2(Field), FS(Field), SS(Bound), MLB(Mid), W(Bound), N(Field)]
+    // y基準: LOS=60%。オフェンスは64%以上、ディフェンスは最高56%で絶対にLOSを割らない。
+    const plays = {
+        "0": { c: [10,45, 85,45, 65,20, 20,20, 35,50, 26,49, 66,51], r: ["Z:2-High", "Z:2-High", "Z:2-High", "Z:2-High", "Z:Under", "Z:Under", "Z:Under"], t: "スナップ前の基本陣形", d: "プレ・スナップ時の基本的な2-High（セーフティが2人奥にいる）の配置です。ここから各カバレッジへローテーションします。" },
+        
+        // ①BASE COVER
+        "1": { c: [10,55, 85,55, 31,44, 46,55, 34,56, 21,54, 66,55], r: ["M:X", "M:Z", "M:T", "B:Blitz", "B:Blitz", "M:H", "M:I"], t: "COVER 0", d: "<strong>【戦術詳細】</strong>すべてのレシーバーにマンツーマンで付き、セーフティのディープヘルプなしで守る超攻撃的カバー。T(RB)がパスコースに出た場合はLBやSFがバンジョー(受け渡し)で対応するのが一般的です。" },
+        "2": { c: [10,45, 85,45, 65,15, 20,15, 35,45, 25,45, 65,45], r: ["Z:Flat", "Z:Flat", "Z:Deep Half", "Z:Deep Half", "Z:Mid Hook", "Z:Hook/Curl", "Z:Hook/Curl"], t: "COVER 2", d: "<strong>【戦術詳細】</strong>両CBがフラット(手前外側)を担当し、両SFがディープハーフ(奥半分)を広範囲に守るゾーンカバレッジ。ディープ中央やSFの外側が構造的な弱点となります。" },
+        "3": { c: [10,45, 85,45, 65,15, 20,15, 43,25, 26,44, 66,46], r: ["Z:Flat", "Z:Flat", "Z:Deep Half", "Z:Deep Half", "Z:Deep Mid", "Z:Hook/Curl", "Z:Hook/Curl"], t: "TAMPA 2", d: "<strong>【戦術詳細】</strong>Cover 2の派生。Cover 2の弱点であるディープ中央を消すため、スナップ直後にMLBが猛スピードでディープミドル(FSとSSの中間点)までドロップします。" },
+        "4": { c: [10,15, 85,15, 66,45, 20,45, 35,45, 25,45, 64,48], r: ["Z:Deep Half", "Z:Deep Half", "Z:Flat", "Z:Flat", "Z:Hook", "Z:Hook", "Z:Flat"], t: "DBL SKY (Inverted Cover 2)", d: "<strong>【戦術詳細】</strong>CBがディープに下がり、セーフティがフラットに降りるCover 2（インバート）。「CBがいるからフラットが空く」というQBの読みを外し、フラットへのパスをSFが狙い打ちします。" },
+        "5": { c: [10,15, 85,15, 50,15, 20,45, 35,45, 25,45, 65,45], r: ["Z:Deep 1/3", "Z:Deep 1/3", "Z:Deep 1/3", "Z:Flat", "Z:Hook", "Z:Hook", "Z:Flat"], t: "COVER 3", d: "<strong>【戦術詳細】</strong>3人のディフェンダー（両CBとFS）がディープエリアを3等分して守り、下層の4エリアをSSやLB陣で守るゾーンカバーです。" },
+        "6": { c: [10,15, 85,15, 48,15, 11,44, 35,45, 25,45, 65,45], r: ["Z:Deep 1/3", "Z:Deep 1/3", "Z:Deep 1/3", "Z:Flat(B)", "Z:Hook", "Z:Flat", "Z:Hook"], t: "BLIND (Boundary Sky)", d: "<strong>【戦術詳細】</strong>狭いバンダリー側のセーフティ(SS)が外側のフラットゾーンへ素早く下りてくるCover 3バリエーション。ショートサイドへのランやパスに壁を作ります。" },
+        "7": { c: [10,15, 85,15, 48,15, 26,39, 35,45, 10,45, 65,45], r: ["Z:Deep 1/3", "Z:Deep 1/3", "Z:Deep 1/3", "Z:Robber(Buzz)", "Z:Hook", "Z:Flat", "Z:Hook"], t: "ROBBER (Boundary Buzz)", d: "<strong>【戦術詳細】</strong>狭いバンダリー側のセーフティ(SS)がフック・カールゾーンへ急降下(Buzz/Robber)してゾーンを埋めるCover 3バリエーションです。中央のディープサードはFSがスライドして守ります。" },
+        "8": { c: [10,15, 85,15, 56,39, 48,15, 35,45, 25,45, 85,45], r: ["Z:Deep 1/3", "Z:Deep 1/3", "Z:Buzz(F)", "Z:Deep 1/3", "Z:Hook", "Z:Hook", "Z:Flat"], t: "BUZZ (Field Buzz)", d: "<strong>【戦術詳細】</strong>広いフィールド側のセーフティ(FS)がディープからフック・カールゾーンへと素早く下りてきてゾーンを埋めるCover 3バリエーションです。中央のディープサードはSSがスライドして守ります。" },
+        "9": { c: [10,15, 85,15, 81,44, 48,15, 35,45, 25,45, 65,45], r: ["Z:Deep 1/3", "Z:Deep 1/3", "Z:Flat(Roll)", "Z:Deep 1/3", "Z:Hook", "Z:Hook", "Z:Flat"], t: "ROLL", d: "<strong>【戦術詳細】</strong>広いフィールド側のセーフティ(FS)が外側のフラットゾーンへ素早く斜めに降下してカバーする動きです。広い側のスクリーンパスなどを潰します。" },
+        "10": { c: [10,45, 85,15, 50,15, 20,15, 35,45, 25,45, 65,45], r: ["Z:Flat(Cloud)", "Z:Deep 1/3", "Z:Deep 1/3", "Z:Deep 1/3", "Z:Hook", "Z:Hook", "Z:Flat"], t: "CLOUD", d: "<strong>【戦術詳細】</strong>バンダリー側のCBが手前のフラットゾーンにステイ(クラウド)し、背後のディープ1/3をSSがカバーするCover 3バリエーションです。" },
+        "11": { c: [13,15, 88,15, 63,15, 38,15, 35,45, 25,45, 65,45], r: ["Z:Deep 1/4", "Z:Deep 1/4", "Z:Deep 1/4", "Z:Deep 1/4", "Z:Mid Hook", "Z:Hook/Flat", "Z:Hook/Flat"], t: "COVER 4 (Quarters)", d: "<strong>【戦術詳細】</strong>DB陣4名がディープを均等に「1/4ずつ」正確に等分して守るカバレッジ。内側のレシーバーが縦に走った場合はマンツーマンのように追従します。" },
+        "12": { c: [10,40, 85,40, 65,15, 20,15, 35,45, 25,45, 65,45], r: ["Match:Flat", "Match:Flat", "Match:Deep", "Match:Deep", "Z:Mid Hook", "Z:Hook", "Z:Hook"], t: "PALMS (2-Read)", d: "<strong>【戦術詳細】</strong>Cover 4の派生。#2レシーバーがフラット(外)に出たらCBがそれに飛びついて潰し、代わりにSFが大外の#1レシーバーのディープルートをカバーします。" },
+        "13": { c: [10,15, 85,45, 65,15, 35,15, 35,45, 25,45, 65,45], r: ["Z:Deep 1/4", "Z:Flat", "Z:Deep Half", "Z:Deep 1/4", "Z:Hook", "Z:Flat", "Z:Hook"], t: "24 (Field 2 / Boundary 4)", d: "<strong>【戦術詳細】</strong>フィールド側(右)をCover 2、バンダリー側(左)をCover 4で守る非対称ゾーンカバレッジです。（※Cover 6のバリエーション）" },
+        "14": { c: [10,55, 88,15, 63,15, 20,55, 35,45, 25,55, 65,45], r: ["M:X", "Z:Deep 1/4", "Z:Deep 1/4", "M:H", "Z:Hook", "M:T", "Z:Hook/Flat"], t: "40 (Field 4 / Boundary 0)", d: "<strong>【戦術詳細】</strong>フィールド側(右)をCover 4で守りつつ、バンダリー側(左)は一切のディープヘルプを持たないCover 0(純粋なマンツーマン)で守る非対称カバレッジです。" },
+
+        // ②OTHER COVER
+        "15": { c: [10,40, 85,50, 65,30, 20,30, 35,55, 25,50, 65,50], r: ["Match", "Match:Tri", "Match:Tri", "Match:Under", "Match", "Match", "Match:Tri"], t: "TRIANGLE", d: "<strong>【戦術詳細】</strong>密集エリアの3人のレシーバーに対し、3人のディフェンダーが三角形の陣形を保ちながら対応し、ルートの交差に応じてマークを受け渡します。" },
+        "16": { c: [10,40, 85,50, 65,30, 20,30, 35,55, 25,50, 65,50], r: ["Match", "Match:Box", "Match:Box", "Match:Under", "Match:Box", "Match:Under", "Match:Box"], t: "BOX", d: "<strong>【戦術詳細】</strong>3人が密集するバンチ隊形に対して、ディフェンス4人で四角形(ボックス)の陣形を保ち、外・内・浅・深の担当エリアに出た選手をキャッチします。" },
+        "17": { c: [10,45, 85,45, 65,45, 20,45, 35,45, 25,45, 50,45], r: ["Z:Flat", "Z:Flat", "Z:Hook", "Z:Hook", "Z:Mid", "Z:Hook", "Z:Hook"], t: "7 UNDER", d: "<strong>【戦術詳細】</strong>ディープゾーンに誰も下がらず、7人のディフェンダー全員でアンダーゾーン（手前）を隙間なく埋める極端なゾーンカバレッジです。ゴール前等で使用されます。" },
+
+        // ③MM
+        "18": { c: [10,55, 85,55, 50,10, 46,55, 31,56, 21,54, 66,55], r: ["M:X", "M:Z", "Z:Deep 1(Free)", "B:Blitz", "M:T", "M:H", "M:I"], t: "1 FREE MM (Cover 1)", d: "<strong>【戦術詳細】</strong>1人のセーフティ(FS)がディープ中央を守り、他のディフェンダーはマンツーマンで守るシングルハイの基本形です。" },
+        "19": { c: [10,55, 85,55, 50,10, 35,40, 31,56, 21,54, 66,55], r: ["M:X", "M:Z", "Z:Deep 1(Free)", "Z:Hole(Rat)", "M:T", "M:H", "M:I"], t: "1 FREE HOLE", d: "<strong>【戦術詳細】</strong>1 Freeの形に加え、LBやSSの1人が中央の浅いゾーン(Hole)にフリーで構え、クロスルートの妨害やパスカットを狙います。" },
+        "20": { c: [10,55, 85,55, 65,15, 20,15, 30,55, 21,55, 66,55], r: ["M:X", "M:Z", "Z:Deep Half", "Z:Deep Half", "M:T", "M:H", "M:I"], t: "2 FREE MM (Cover 5)", d: "<strong>【戦術詳細】</strong>2人のセーフティがディープハーフを守る安心感を背景に、下層の5人が完全なマンツーマンで守る強固なカバーです(2-Man Under)。" },
+
+        // ④COVER TECH
+        "21": { c: [10,15, 85,15, 65,20, 55,20, 35,45, 25,45, 65,45], r: ["M:X", "Z:Deep", "Match", "Match:Poach", "Match", "Match", "Match"], t: "POACH / SOLO", d: "<strong>【戦術詳細】</strong>Trips隊形に対し、逆サイドのSFがフィールド中央を越えて、Trips側の#3レシーバーが突いてくるディープシームを強奪(Poach)しに行きます。" },
+        "22": { c: [10,55, 85,55, 65,55, 20,55, 30,55, 25,50, 66,50], r: ["M:X(MEG)", "M:Z(MEG)", "M:I(MEG)", "M:H(MEG)", "M:T", "Match", "Match"], t: "MEG (Man Everywhere He Goes)", d: "<strong>【戦術詳細】</strong>担当レシーバーに対し、ルートに関係なく完全に1対1でついていく純粋なマンツーマン。ゾーンの受け渡しを一切行いません。" },
+        "23": { c: [10,55, 85,55, 65,55, 20,55, 30,55, 25,50, 66,50], r: ["M:MES", "M:MES", "M:MES", "M:MES", "M:MES", "Match", "Match"], t: "MES (Man Except Shallow)", d: "<strong>【戦術詳細】</strong>特定の浅いルート(Shallow)を走った場合を除き、基本的にはマンツーマンでフィールドのどこまでも追従するマッチアップのルールです。" },
+        "24": { c: [10,20, 85,50, 65,30, 20,30, 35,55, 25,55, 65,55], r: ["Z:Bail Deep", "M:Z", "Match", "Match", "Match", "Match", "Match"], t: "BAIL", d: "<strong>【戦術詳細】</strong>プレスの構えを見せてQBにマンツーマンだと誤認させますが、スナップと同時に素早く半身で反転し、ディープゾーンへと逃げるように下がるテクニックです。" },
+        "25": { c: [10,50, 85,50, 65,30, 20,30, 35,55, 25,55, 60,55], r: ["M:X", "M:Z", "Match", "Match", "Match", "Match", "Z:Wall(壁)"], t: "WALL", d: "<strong>【戦術詳細】</strong>シャローなどで内側へクロスしてくるレシーバーのルート上に体をねじ込んで激しくぶつかり、「ここから内側へは行かせない」と壁を作るテクニックです。" },
+        "26": { c: [10,30, 85,30, 65,10, 20,10, 35,35, 25,35, 65,35], r: ["Z:Sink", "Z:Sink", "Z:Sink", "Z:Sink", "Z:Sink", "Z:Sink", "Z:Sink"], t: "SINK", d: "<strong>【戦術詳細】</strong>自分のゾーンにレシーバーが誰も入ってこない場合、立ち止まるのではなく「さらに奥のルート」を警戒してズルズルと深くドロップする動きです。" },
+        "27": { c: [10,55, 85,50, 65,30, 18,30, 35,55, 25,55, 65,55], r: ["M:X(Double)", "M:Z", "Match", "M:X(Double)", "Match", "Match", "Match"], t: "BLANKET", d: "<strong>【戦術詳細】</strong>絶対にボールを触らせたくないエースレシーバーに対して、毛布を被せるように2人以上で完全に覆い隠し、QBにパスを諦めさせるダブルカバレッジです。" },
+        "28": { c: [10,15, 85,15, 50,15, 46,55, 36,50, 26,49, 66,51], r: ["Z:Deep 1/3", "Z:Deep 1/3", "Z:Deep 1/3", "B:Blitz", "Z:Flat/Hook", "Z:Hook", "Z:Flat"], t: "ZONE BLITZ", d: "<strong>【戦術詳細】</strong>ブリッツをかけてQBにプレッシャーを与えつつ、残りの選手でゾーンを守ります。誰がラッシュし誰が下がるかを隠してQBの読みを狂わせます。" },
+
+        // ⑤WORD
+        "29": { c: [10,45, 85,45, 65,20, 20,20, 35,50, 26,49, 66,51], r: ["Z:Under", "Z:Under", "Z:Deep Half", "Z:Deep Half", "Z:Under", "Z:Under", "Z:Under"], t: "MOFO (Middle Of Field Open)", d: "<strong>【戦術詳細】</strong>セーフティが2人左右に開いており、フィールドの中央奥(Middle of Field)がぽっかり空いている(Open)状態、つまり2-Highの陣形を指します。" },
+        "30": { c: [10,55, 85,55, 50,10, 20,45, 35,55, 25,55, 65,55], r: ["M", "M", "Z:Deep 1/3", "Z:Under", "Z:Under", "Z:Under", "Z:Under"], t: "MOFC (Middle Of Field Close)", d: "<strong>【戦術詳細】</strong>1人のセーフティ(FS)がフィールドの中央奥に鎮座しており、中央へのディープパスの道が閉じられている(Close)状態、つまり1-Highの陣形を指します。" },
+        "31": { c: [10,45, 85,45, 70,20, 30,20, 50,20, 25,50, 65,50], r: ["Z:Under", "Z:Under", "Z:Deep 1/3", "Z:Deep 1/3", "Z:Deep 1/3", "Z:Under", "Z:Under"], t: "DIME", d: "<strong>【戦術詳細】</strong>DBを6人配置するダイム・パッケージなどで、セーフティクラスの選手が3人後ろに並ぶ形。ディープを広くカバーし、ロングパスを徹底的に防ぎます。" }
+    };
+    
+    const playerIds = ['cb1', 'cb2', 'fs', 'ss', 'mlb', 'olb1', 'olb2'];
+    
+    function executePlay() {
+        const select = document.getElementById('playSelect');
+        const playId = select.value;
+        const playData = plays[playId];
+        if(!playData) return;
+
+        const off1 = document.getElementById('off1');
+        const off2 = document.getElementById('off2');
+        const off3 = document.getElementById('off3');
+        const off4 = document.getElementById('off4');
+        const off5 = document.getElementById('off5');
+        const qb = document.getElementById('qb'); 
+
+        // Tripsと見なすプレイIDを新分類に合わせて更新 (TRIANGLE, BOX, POACH/SOLO)
+        const tripsPlays = ["15", "16", "21"];
+        
+        if (tripsPlays.indexOf(playId) !== -1) {
+            // 3by1 (右側Trips): 左(Boundary)がX、右(Field)が外から順に Z, H, I
+            off1.innerText = "X"; off1.style.left = "10%"; off1.style.top = "64%";
+            off2.innerText = "I"; off2.style.left = "55%"; off2.style.top = "64%"; 
+            off3.innerText = "H"; off3.style.left = "70%"; off3.style.top = "64%"; 
+            off4.innerText = "Z"; off4.style.left = "85%"; off4.style.top = "64%";
+            off5.innerText = "T"; off5.style.left = "27%"; off5.style.top = "75%";
+            qb.style.left = "35%"; qb.style.top = "75%";
+        } else {
+            // 2by2: 左(Boundary)がX,H / 右(Field)がI,Z
+            off1.innerText = "X"; off1.style.left = "10%"; off1.style.top = "64%";
+            off2.innerText = "H"; off2.style.left = "20%"; off2.style.top = "64%";
+            off3.innerText = "I"; off3.style.left = "65%"; off3.style.top = "64%"; 
+            off4.innerText = "Z"; off4.style.left = "85%"; off4.style.top = "64%";
+            off5.innerText = "T"; off5.style.left = "27%"; off5.style.top = "75%";
+            qb.style.left = "35%"; qb.style.top = "75%"; 
+        }
+
+        const coords = playData.c;
+        const roles = playData.r;
+        for(let i = 0; i < playerIds.length; i++) {
+            const playerEl = document.getElementById(playerIds[i]);
+            
+            playerEl.style.left = coords[i*2] + '%';
+            playerEl.style.top = coords[i*2 + 1] + '%';
+
+            let roleStr = roles[i] || "";
+            let typeClass = "defense";
+            if (roleStr.indexOf("M:") === 0 || roleStr === "M") typeClass = "defense man";
+            else if (roleStr.indexOf("Z:") === 0) typeClass = "defense zone";
+            else if (roleStr.indexOf("B:") === 0) typeClass = "defense blitz";
+            else if (roleStr.indexOf("Match") === 0) typeClass = "defense match";
+            else if (roleStr.indexOf("S:") === 0) typeClass = "defense special";
+
+            playerEl.className = "player " + typeClass;
+
+            let labelText = roleStr.indexOf(":") !== -1 ? roleStr.split(":")[1] : roleStr;
+            let displayName = playerIds[i].toUpperCase();
+            if (playerIds[i] === 'olb1') displayName = 'W';
+            if (playerIds[i] === 'olb2') displayName = 'N';
+
+            playerEl.innerHTML = displayName + `<span class="role-label">${labelText}</span>`;
+        }
+        
+        const titleText = select.options[select.selectedIndex].text;
+        let descHtml = `<span class="play-title">${titleText}</span>`;
+        if (playData.d) {
+            descHtml += `<div class="play-detail">${playData.d}</div>`;
+        } else {
+             descHtml += `<div class="play-detail">${playData.t}</div>`;
+        }
+        document.getElementById('descText').innerHTML = descHtml;
+    }
+    
+    // イベントリスナーの登録
+    window.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('playSelect').addEventListener('change', executePlay);
+        document.querySelector('.btn-apply').addEventListener('click', executePlay);
+        document.querySelector('.btn-reset').addEventListener('click', function() {
+            document.getElementById('playSelect').value = "0";
+            executePlay();
+        });
+        executePlay();
+    });
+</script>
+</body>
+</html>
